@@ -1,0 +1,21 @@
+# ============================================================
+# Docker Compose Production Overrides — Kang Bejo
+# Modul 9: Git Workflow — docker-compose.prod.yml
+# ============================================================
+# Penggunaan:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# ============================================================
+
+services:
+  backend:
+    environment:
+      - DEBUG=false
+    restart: always
+
+  frontend:
+    restart: always
+
+  db:
+    restart: always
+    # Di production, port DB tidak diekspos ke host (hanya internal)
+    ports: !reset []

@@ -118,17 +118,19 @@ npm run dev
 
 ## 📅 Roadmap Pengembangan
 
-| Modul | Fokus                     | Status |
-|-------|---------------------------|--------|
-| 1     | Setup & Hello World       | ✅     |
-| 2     | REST API + Database        | ✅     |
-| 3     | React Frontend Lengkap    | ⬜     |
-| 4     | Full-Stack Integration    | ⬜     |
-| 5-7   | Docker & Compose          | ⬜     |
-| 8     | UTS Demo                  | ⬜     |
-| 9-11  | CI/CD Pipeline            | ⬜     |
-| 12-14 | Microservices + Gateway   | ⬜     |
-| 15    | Polish & Final UAS        | ⬜     |
+| Modul | Fokus                           | Status |
+|-------|---------------------------------|--------|
+| 1     | Setup & Hello World             | ✅     |
+| 2     | REST API + Database             | ✅     |
+| 3     | React Frontend Lengkap          | ✅     |
+| 4     | Full-Stack Integration          | ✅     |
+| 5-7   | Docker & Compose                | ✅     |
+| 8     | UTS Demo                        | ⬜     |
+| 9     | Git Workflow & Branching        | ✅     |
+| 10    | CI Pipeline (GitHub Actions)    | ✅     |
+| 11    | CD Pipeline & Deploy            | ⬜     |
+| 12-14 | Microservices + Gateway         | ⬜     |
+| 15    | Polish & Final UAS              | ⬜     |
 
 ---
 

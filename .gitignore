@@ -4,19 +4,26 @@ __pycache__/
 *.pyo
 *.pyd
 venv/
+
+# Environment files (JANGAN commit file asli!)
 .env
 .env.*
 !.env.example
-*.egg-info/
-dist/
-build/
+!.env.docker.example
+
+# Test artifacts
+test.db
+.coverage
+htmlcov/
+.pytest_cache/
 
 # Node
 node_modules/
 dist/
+build/
 .cache/
 
-# Docker
+# Docker logs
 *.log
 
 # IDE

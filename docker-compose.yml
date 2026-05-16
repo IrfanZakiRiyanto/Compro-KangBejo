@@ -1,0 +1,85 @@
+# ============================================================
+# Docker Compose — Kang Bejo Company Profile
+# Modul 7: Multi-Container Docker Compose
+# ============================================================
+# Usage:
+#   docker compose up -d          # Start semua services
+#   docker compose down            # Stop & remove containers
+#   docker compose logs -f         # Lihat logs real-time
+#   docker compose ps              # Status services
+#   docker compose up -d --build   # Rebuild & start
+# ============================================================
+
+services:
+
+  # ==================== DATABASE ====================
+  db:
+    image: postgres:16-alpine                                           # Image PostgreSQL ringan berbasis Alpine
+    container_name: kangbejo-db                                         # Nama container database
+    restart: unless-stopped                                             # Restart otomatis kecuali dihentikan manual
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kangbejo2024
+      POSTGRES_DB: kangbejo
+    ports:
+      - "5434:5432"                                                     # Port 5434 di host → 5432 di container (5434 agar tidak bentrok dengan PostgreSQL lokal)
+    volumes:
+      - pgdata:/var/lib/postgresql/data                                 # Data persisten agar tidak hilang saat container restart
+    networks:
+      - kangbejo_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kangbejo"]        # Cek apakah DB siap menerima koneksi
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ==================== BACKEND ====================
+  backend:
+    build:
+      context: ./backend                                                # Direktori sumber kode backend
+      dockerfile: Dockerfile
+    container_name: kangbejo-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env.docker                                           # Environment variables khusus Docker
+    ports:
+      - "8080:8000"                                                     # API backend dapat diakses di localhost:8080
+    networks:
+      - kangbejo_net
+    depends_on:
+      db:
+        condition: service_healthy                                      # Backend hanya start setelah DB sehat
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # ==================== FRONTEND ====================
+  frontend:
+    build:
+      context: ./frontend                                               # Direktori sumber kode frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8080                             # Dipakai saat build React (injected oleh Vite)
+    container_name: kangbejo-frontend
+    restart: unless-stopped
+    ports:
+      - "8081:80"                                                       # Frontend diakses di localhost:8081
+    networks:
+      - kangbejo_net
+    depends_on:
+      - backend                                                         # Frontend start setelah backend container berjalan
+
+# ==================== VOLUMES ====================
+volumes:
+  pgdata:
+    name: kangbejo-pgdata                                               # Volume untuk data PostgreSQL
+
+# ==================== NETWORKS ====================
+networks:
+  kangbejo_net:
+    name: kangbejo-network
+    driver: bridge                                                      # Bridge network agar container saling terhubung via nama

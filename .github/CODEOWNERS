@@ -1,0 +1,28 @@
+# =============================================
+# CODEOWNERS — Compro Kang Bejo
+# Modul 9: Git Workflow & Branching Strategy
+# =============================================
+# Format: pola-file  @github-username
+# Reviewer otomatis ditambahkan saat PR mengubah file terkait
+# Ganti @username-* dengan username GitHub asli setiap anggota!
+# =============================================
+
+# Backend — Lead Backend
+/backend/                @username-lead-backend
+
+# Frontend — Lead Frontend
+/frontend/               @username-lead-frontend
+
+# Docker & Infrastructure — Lead DevOps
+docker-compose.yml       @username-lead-devops
+docker-compose.prod.yml  @username-lead-devops
+/backend/Dockerfile      @username-lead-devops
+/frontend/Dockerfile     @username-lead-devops
+/frontend/nginx.conf     @username-lead-devops
+
+# Dokumentasi & README — Lead QA & Docs
+README.md                @username-lead-qa
+/docs/                   @username-lead-qa
+
+# CI/CD Workflows — Lead DevOps (atau Lead CI/CD jika 5 orang)
+/.github/workflows/      @username-lead-devops

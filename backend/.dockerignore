@@ -1,0 +1,33 @@
+# Virtual environment
+venv/
+.venv/
+
+# Environment files (JANGAN masuk ke image — berisi secrets!)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Docker files sendiri
+Dockerfile
+.dockerignore
+
+# Testing
+tests/
+pytest.ini
+*.test.py
+
+# Documentation
+*.md
+docs/

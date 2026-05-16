@@ -1,0 +1,34 @@
+# Node modules (besar, tidak perlu di image)
+node_modules/
+
+# Build output (dibuild ulang di dalam container)
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Docker files sendiri (bukan nginx.conf, karena itu diperlukan saat build!)
+Dockerfile
+.dockerignore
+
+# Documentation
+*.md
+README.md
+
+# Test files
+src/test/
+*.test.js
+*.test.jsx
+*.spec.js
+*.spec.jsx

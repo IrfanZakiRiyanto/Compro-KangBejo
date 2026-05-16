@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -105,7 +107,11 @@ def seed_initial_data(db: Session):
 
 @app.on_event("startup")
 def on_startup():
-    """Jalankan seeder saat aplikasi pertama kali start."""
+    """Jalankan seeder saat aplikasi pertama kali start (dilewati saat testing)."""
+    # Saat pytest berjalan, variabel TESTING=true sehingga seeder dilewati
+    # agar data awal tidak mencemari hasil tes
+    if os.getenv("TESTING") == "true":
+        return
     db = next(get_db())
     try:
         seed_initial_data(db)

@@ -10,14 +10,14 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise ValueError(
-        "DATABASE_URL tidak ditemukan! "
-        "Buat file backend/.env dengan isi: "
-        "DATABASE_URL=postgresql://postgres:PASSWORD@localhost:5432/kangbejo"
-    )
+    # Fallback: SQLite in-memory untuk testing di CI (tanpa PostgreSQL)
+    DATABASE_URL = "sqlite:///./test.db"
+    _SQLITE_ARGS = {"check_same_thread": False}
+else:
+    _SQLITE_ARGS = {}
 
 # Buat engine (koneksi ke database)
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, connect_args=_SQLITE_ARGS)
 
 # Buat session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

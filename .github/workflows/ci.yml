@@ -1,0 +1,181 @@
+# ==============================================
+# CI Pipeline — Compro Kang Bejo
+# Modul 10: CI/CD Pipeline — GitHub Actions
+# ==============================================
+# Pipeline ini berjalan otomatis saat:
+#   - Push ke branch main
+#   - Pull Request ke branch main
+#
+# Jobs:
+#   1. test-backend  : Install deps + run pytest
+#   2. test-frontend : Install deps + run vitest + build
+#   3. build-docker  : Build Docker images (validasi Dockerfile)
+#   4. notify-failure: Komentar ke PR jika CI gagal
+#
+# Optimasi:
+#   - concurrency: cancel run lama jika ada push baru
+#   - timeout-minutes: 10 per job
+# ==============================================
+
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# ── Concurrency: cancel run lama jika ada push baru ──────────
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  # ================================
+  # JOB 1: Test Backend (Python/FastAPI)
+  # ================================
+  test-backend:
+    name: 🐍 Test Backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 📦 Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: 📥 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🧪 Run tests with coverage
+        run: |
+          pytest --cov=. --cov-report=term-missing --cov-fail-under=50
+
+  # ================================
+  # JOB 2: Test Frontend (React/Vitest)
+  # ================================
+  test-frontend:
+    name: ⚛️ Test Frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      - name: 🧪 Run tests
+        run: npm test -- --reporter=verbose
+
+      - name: 🏗️ Build frontend
+        run: npm run build
+
+  # ================================
+  # JOB 3: Build Docker Images
+  # ================================
+  build-docker:
+    name: 🐳 Build Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [test-backend, test-frontend]   # Hanya jalan jika kedua test PASS
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐳 Build backend image
+        run: docker build -t kangbejo-backend:ci ./backend
+
+      - name: 🐳 Build frontend image
+        run: docker build -t kangbejo-frontend:ci ./frontend
+
+      - name: ✅ Build success
+        run: |
+          echo "✅ Semua Docker image berhasil di-build!"
+          docker images | grep kangbejo
+
+  # ================================
+  # JOB 4: Notifikasi Kegagalan CI
+  # Hanya berjalan saat Pull Request dan ada job yang gagal
+  # ================================
+  notify-failure:
+    name: 🔔 Notify CI Failure
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [test-backend, test-frontend, build-docker]
+
+    # Hanya jalankan jika: ada PR, dan minimal satu job gagal
+    if: >
+      github.event_name == 'pull_request' &&
+      (needs.test-backend.result == 'failure' ||
+       needs.test-frontend.result == 'failure' ||
+       needs.build-docker.result == 'failure')
+
+    steps:
+      - name: 🔔 Post failure comment to PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const jobs = [
+              { name: '🐍 Test Backend',  result: '${{ needs.test-backend.result }}' },
+              { name: '⚛️ Test Frontend', result: '${{ needs.test-frontend.result }}' },
+              { name: '🐳 Build Docker',  result: '${{ needs.build-docker.result }}' },
+            ];
+
+            const icon  = (r) => r === 'success' ? '✅' : r === 'failure' ? '❌' : r === 'skipped' ? '⏭️' : '⚠️';
+            const rows  = jobs.map(j => `| ${j.name} | ${icon(j.result)} ${j.result} |`).join('\n');
+            const runUrl = `https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`;
+
+            const body = [
+              '## ❌ CI Pipeline Gagal',
+              '',
+              'Halo! Pipeline CI gagal pada PR ini. Mohon periksa log dan perbaiki sebelum merge.',
+              '',
+              '| Job | Status |',
+              '|-----|--------|',
+              rows,
+              '',
+              `🔗 [Lihat detail run](${runUrl})`,
+              '',
+              '> Pesan ini dibuat otomatis oleh CI Pipeline — Kang Bejo',
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner:        context.repo.owner,
+              repo:         context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
