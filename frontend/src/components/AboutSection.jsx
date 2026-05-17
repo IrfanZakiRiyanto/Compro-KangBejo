@@ -1,20 +1,9 @@
-/**
- * AboutSection — Section tentang Desa Wisata Kang Bejo
- * Props:
- *   about (object | null) — data dari GET /about
- */
-function AboutSection({ about }) {
+import { ABOUT_IMAGE } from "../data/images"
+
+function AboutSection({ about, facilityCount, activityCount }) {
   if (!about) return null
-
-  const tags = [
-    { icon: "🌿", label: "Wisata Alam" },
-    { icon: "📚", label: "Edukasi" },
-    { icon: "🎭", label: "Budaya" },
-    { icon: "🌾", label: "Pertanian" },
-  ]
-
   return (
-    <section id="tentang" className="section">
+    <section id="tentang" className="section-alt">
       <div className="container">
         <div className="section-header">
           <span className="section-chip">Tentang Kami</span>
@@ -23,22 +12,38 @@ function AboutSection({ about }) {
         </div>
 
         <div className="about-grid">
-          {/* Kartu Lokasi */}
-          <div className="about-card glass-card">
-            <div className="about-icon">📍</div>
-            <h3>Lokasi</h3>
-            <p>{about.location}</p>
+          {/* Gambar kiri */}
+          <div className="about-img-wrap">
+            <img
+              src={ABOUT_IMAGE}
+              alt="Desa Wisata Kang Bejo"
+              className="about-img"
+              loading="lazy"
+            />
           </div>
 
-          {/* Deskripsi + Tags */}
-          <div className="about-main glass-card">
+          {/* Teks kanan */}
+          <div className="about-text">
+            <div className="about-location">📍 {about.location}</div>
             <p className="about-desc">{about.description}</p>
             <div className="about-tags">
-              {tags.map(tag => (
-                <span key={tag.label} className="tag">
-                  {tag.icon} {tag.label}
-                </span>
+              {["🌿 Wisata Alam","📚 Edukasi","🎭 Budaya","🌾 Pertanian"].map(t => (
+                <span key={t} className="tag">{t}</span>
               ))}
+            </div>
+            <div className="about-stats">
+              <div className="about-stat">
+                <div className="about-stat-num">{facilityCount ?? "–"}</div>
+                <div className="about-stat-label">Fasilitas</div>
+              </div>
+              <div className="about-stat">
+                <div className="about-stat-num">{activityCount ?? "–"}</div>
+                <div className="about-stat-label">Kegiatan</div>
+              </div>
+              <div className="about-stat">
+                <div className="about-stat-num">2025</div>
+                <div className="about-stat-label">Berdiri</div>
+              </div>
             </div>
           </div>
         </div>
@@ -46,5 +51,4 @@ function AboutSection({ about }) {
     </section>
   )
 }
-
 export default AboutSection

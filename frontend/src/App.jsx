@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import "./App.css"
 
-// ── Komponen
 import Navbar        from "./components/Navbar"
 import HeroSection   from "./components/HeroSection"
 import AboutSection  from "./components/AboutSection"
@@ -10,29 +9,19 @@ import ActivityCard  from "./components/ActivityCard"
 import SectionHeader from "./components/SectionHeader"
 import PageFooter    from "./components/PageFooter"
 
-// ── Service layer
-import {
-  checkHealth,
-  fetchAbout,
-  fetchFacilities,
-  fetchActivities,
-} from "./services/api"
+import { checkHealth, fetchAbout, fetchFacilities, fetchActivities } from "./services/api"
+import { FACILITY_IMAGES, DEFAULT_FACILITY_IMAGE } from "./data/images"
 
-// ─────────────────────────────────────────────────────
-//  ROOT COMPONENT
-// ─────────────────────────────────────────────────────
 function App() {
-  // ── State ─────────────────────────────────────────
   const [activeSection, setActiveSection] = useState("beranda")
   const [isConnected,   setIsConnected]   = useState(false)
   const [apiVersion,    setApiVersion]    = useState(null)
+  const [about,         setAbout]         = useState(null)
+  const [facilities,    setFacilities]    = useState([])
+  const [activities,    setActivities]    = useState([])
+  const [loading,       setLoading]       = useState(true)
 
-  const [about,       setAbout]       = useState(null)
-  const [facilities,  setFacilities]  = useState([])
-  const [activities,  setActivities]  = useState([])
-  const [loading,     setLoading]     = useState(true)
-
-  // ── Load semua data dari API ───────────────────────
+  // ── Fetch semua data ──────────────────────────────
   const loadAll = useCallback(async () => {
     setLoading(true)
     try {
@@ -42,10 +31,15 @@ function App() {
         fetchFacilities({ active_only: true }),
         fetchActivities({ active_only: true }),
       ])
-
       setIsConnected(connected)
       setAbout(aboutData)
-      setFacilities(facData.items ?? [])
+      // Enrich fasilitas dengan URL gambar dari data/images.js
+      setFacilities(
+        (facData.items ?? []).map(f => ({
+          ...f,
+          image: FACILITY_IMAGES[f.name] ?? DEFAULT_FACILITY_IMAGE,
+        }))
+      )
       setActivities(actData.items ?? [])
     } catch (err) {
       console.error("Gagal memuat data:", err)
@@ -54,48 +48,34 @@ function App() {
     }
   }, [])
 
-  // Fetch versi API
+  // Ambil versi API
   useEffect(() => {
-    fetch(
-      (import.meta.env.VITE_API_URL || "http://localhost:8000") + "/"
-    )
-      .then(r => r.json())
-      .then(d => setApiVersion(d.version))
-      .catch(() => {})
+    const base = import.meta.env.VITE_API_URL || "http://localhost:8000"
+    fetch(`${base}/`).then(r => r.json()).then(d => setApiVersion(d.version)).catch(() => {})
   }, [])
 
-  // Load data saat mount
   useEffect(() => { loadAll() }, [loadAll])
 
-  // ── Scroll handler ─────────────────────────────────
-  const scrollTo = useCallback((sectionId) => {
-    setActiveSection(sectionId)
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
+  // ── Scroll & Intersection ────────────────────────
+  const scrollTo = useCallback((id) => {
+    setActiveSection(id)
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
   }, [])
 
-  // Highlight nav saat scroll
   useEffect(() => {
-    const sections = ["beranda", "tentang", "fasilitas", "kegiatan"]
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id)
-        })
-      },
-      { threshold: 0.4 }
+    const ids = ["beranda","tentang","fasilitas","kegiatan"]
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id) }),
+      { threshold: 0.35 }
     )
-    sections.forEach(id => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
-    return () => observer.disconnect()
-  }, [])
+    ids.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el) })
+    return () => obs.disconnect()
+  }, [loading])
 
-  // ── Render ─────────────────────────────────────────
+  // ── Render ───────────────────────────────────────
   return (
     <div className="app">
 
-      {/* ── NAVBAR ── */}
       <Navbar
         activeSection={activeSection}
         onNavClick={scrollTo}
@@ -103,7 +83,6 @@ function App() {
         apiVersion={apiVersion}
       />
 
-      {/* ── HERO ── */}
       <HeroSection
         facilityCount={facilities.length}
         activityCount={activities.length}
@@ -112,38 +91,39 @@ function App() {
         onActivities={() => scrollTo("kegiatan")}
       />
 
-      {/* ── LOADING BAR ── */}
       {loading && (
         <div className="loading-bar">
-          <div className="loading-spinner"></div>
-          <span>Memuat data dari API...</span>
+          <div className="loading-spinner" />
+          <span>Memuat data dari API…</span>
         </div>
       )}
 
-      {/* ── TENTANG ── */}
-      <AboutSection about={about} />
+      {/* TENTANG */}
+      <AboutSection
+        about={about}
+        facilityCount={facilities.length}
+        activityCount={activities.length}
+      />
 
-      {/* ── FASILITAS ── */}
+      {/* FASILITAS */}
       {facilities.length > 0 && (
-        <section id="fasilitas" className="section section-alt">
+        <section id="fasilitas" className="section">
           <div className="container">
             <SectionHeader
               chip="Fasilitas"
               title="Apa yang Kami Sediakan"
               subtitle="Nikmati berbagai fasilitas lengkap di Desa Wisata Kang Bejo"
             />
-            <div className="cards-grid">
-              {facilities.map(f => (
-                <FacilityCard key={f.id} facility={f} />
-              ))}
+            <div className="cards-grid-2">
+              {facilities.map(f => <FacilityCard key={f.id} facility={f} />)}
             </div>
           </div>
         </section>
       )}
 
-      {/* ── KEGIATAN ── */}
+      {/* KEGIATAN */}
       {activities.length > 0 && (
-        <section id="kegiatan" className="section">
+        <section id="kegiatan" className="section-alt">
           <div className="container">
             <SectionHeader
               chip="Kegiatan"
@@ -151,17 +131,24 @@ function App() {
               subtitle="Berbagai kegiatan menarik yang bisa kamu ikuti bersama keluarga & teman"
             />
             <div className="cards-grid">
-              {activities.map((a, idx) => (
-                <ActivityCard key={a.id} activity={a} index={idx} />
-              ))}
+              {activities.map((a, i) => <ActivityCard key={a.id} activity={a} index={i} />)}
             </div>
           </div>
         </section>
       )}
 
-      {/* ── FOOTER ── */}
-      <PageFooter apiVersion={apiVersion} />
+      {/* CTA BANNER */}
+      {!loading && (
+        <div className="cta-banner">
+          <h2 className="cta-title">Siap Berkunjung ke Kang Bejo?</h2>
+          <p className="cta-sub">Rasakan sendiri keindahan desa wisata edukasi di jantung Balikpapan</p>
+          <button className="btn-cta" onClick={() => scrollTo("tentang")}>
+            Pelajari Lebih Lanjut
+          </button>
+        </div>
+      )}
 
+      <PageFooter apiVersion={apiVersion} />
     </div>
   )
 }

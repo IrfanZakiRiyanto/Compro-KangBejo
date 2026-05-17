@@ -1,22 +1,15 @@
-/**
- * ActivityCard — Kartu untuk satu kegiatan
- * Props:
- *   activity (object) — { id, name, description, icon, is_active }
- *   index (number)    — urutan tampilan (untuk nomor dekoratif)
- */
-function ActivityCard({ activity, index }) {
-  const displayNum = String(index + 1).padStart(2, "0")
+import { ACTIVITY_GRADIENTS } from "../data/images"
 
+function ActivityCard({ activity, index }) {
+  const gradient = ACTIVITY_GRADIENTS[index % ACTIVITY_GRADIENTS.length]
+  const num = String(index + 1).padStart(2, "0")
   return (
     <div
       id={`activity-${activity.id}`}
-      className="activity-card glass-card"
-      role="article"
-      aria-label={`Kegiatan: ${activity.name}`}
+      className="activity-card"
+      style={{ background: gradient }}
     >
-      {/* Nomor dekoratif di background */}
-      <div className="activity-num" aria-hidden="true">{displayNum}</div>
-
+      <div className="activity-num" aria-hidden="true">{num}</div>
       <div className="activity-icon">{activity.icon || "⭐"}</div>
       <h3 className="activity-name">{activity.name}</h3>
       {activity.description && (
@@ -25,5 +18,4 @@ function ActivityCard({ activity, index }) {
     </div>
   )
 }
-
 export default ActivityCard
