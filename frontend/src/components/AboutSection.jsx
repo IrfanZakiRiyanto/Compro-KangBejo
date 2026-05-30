@@ -24,10 +24,10 @@ function AboutSection({ about, facilityCount, activityCount }) {
 
           {/* Teks kanan */}
           <div className="about-text">
-            <div className="about-location">📍 {about.location}</div>
+            <div className="about-location">Lokasi: {about.location}</div>
             <p className="about-desc">{about.description}</p>
             <div className="about-tags">
-              {["🌿 Wisata Alam","📚 Edukasi","🎭 Budaya","🌾 Pertanian"].map(t => (
+              {["Wisata Alam","Edukasi","Budaya","Pertanian"].map(t => (
                 <span key={t} className="tag">{t}</span>
               ))}
             </div>

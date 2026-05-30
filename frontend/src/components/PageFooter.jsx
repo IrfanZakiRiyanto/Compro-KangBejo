@@ -6,7 +6,7 @@ function PageFooter({ apiVersion }) {
         <div className="footer-top">
           <div className="footer-brand-wrap">
             <div className="footer-brand">
-              <span>🌿</span> Kang Bejo
+              Kang Bejo
             </div>
             <p className="footer-tagline">
               Desa Wisata Edukasi Penghasil Kangkung — Balikpapan, Kalimantan Timur
@@ -16,7 +16,7 @@ function PageFooter({ apiVersion }) {
             <div className="footer-col">
               <h4>Navigasi</h4>
               <ul>
-                {["beranda","tentang","fasilitas","kegiatan"].map(k => (
+                {["beranda","tentang","fasilitas","kegiatan","berita","kontak"].map(k => (
                   <li key={k}>
                     <a href={`#${k}`} style={{textTransform:"capitalize"}}>{k}</a>
                   </li>
@@ -29,6 +29,8 @@ function PageFooter({ apiVersion }) {
                 <li><a href="#tentang">Tentang Desa</a></li>
                 <li><a href="#fasilitas">Fasilitas</a></li>
                 <li><a href="#kegiatan">Kegiatan</a></li>
+                <li><a href="#berita">Berita Terbaru</a></li>
+                <li><a href="#kontak">Kontak & Lokasi</a></li>
               </ul>
             </div>
           </div>

@@ -1,17 +1,42 @@
-import { HERO_IMAGE } from "../data/images"
+import { useState, useEffect } from "react"
+import { HERO_IMAGES } from "../data/images"
 
 function HeroSection({ facilityCount, activityCount, loading, onExplore, onActivities }) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <section id="beranda" className="hero">
-      {/* Background image */}
-      <div
-        className="hero-bg"
-        style={{ backgroundImage: `url("${HERO_IMAGE}")` }}
-      />
-      <div className="hero-overlay" />
+      {/* Background images with transition */}
+      {HERO_IMAGES.map((img, index) => (
+        <div
+          key={img}
+          className={`hero-bg ${index === currentImageIndex ? "active" : ""}`}
+          style={{
+            backgroundImage: `url("${img}")`,
+            opacity: index === currentImageIndex ? 1 : 0,
+            transition: "opacity 1.5s ease-in-out",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 1,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+      ))}
+      <div className="hero-overlay" style={{ zIndex: 2 }} />
 
-      <div className="hero-content">
-        <div className="hero-chip">🌿 Desa Wisata Edukasi</div>
+      <div className="hero-content" style={{ zIndex: 3 }}>
+        <div className="hero-chip">Desa Wisata Edukasi</div>
         <h1 className="hero-title">
           Selamat Datang di<br />
           <span className="highlight">Kang Bejo</span>
@@ -40,13 +65,13 @@ function HeroSection({ facilityCount, activityCount, loading, onExplore, onActiv
           </div>
           <div className="stat-divider" />
           <div className="stat">
-            <span className="stat-num">📍</span>
+            <span className="stat-num">Kota</span>
             <span className="stat-label">Balikpapan</span>
           </div>
         </div>
       </div>
 
-      <div className="hero-scroll-hint">
+      <div className="hero-scroll-hint" style={{ zIndex: 3 }}>
         <span>Scroll ke bawah</span>
         <span className="scroll-arrow">↓</span>
       </div>

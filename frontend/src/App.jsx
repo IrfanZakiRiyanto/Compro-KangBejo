@@ -8,9 +8,11 @@ import FacilityCard  from "./components/FacilityCard"
 import ActivityCard  from "./components/ActivityCard"
 import SectionHeader from "./components/SectionHeader"
 import PageFooter    from "./components/PageFooter"
+import NewsSection   from "./components/NewsSection"
+import ContactSection from "./components/ContactSection"
 
 import { checkHealth, fetchAbout, fetchFacilities, fetchActivities } from "./services/api"
-import { FACILITY_IMAGES, DEFAULT_FACILITY_IMAGE } from "./data/images"
+import { FACILITY_IMAGES, DEFAULT_FACILITY_IMAGE, ACTIVITY_IMAGES, DEFAULT_ACTIVITY_IMAGE } from "./data/images"
 
 function App() {
   const [activeSection, setActiveSection] = useState("beranda")
@@ -40,7 +42,12 @@ function App() {
           image: FACILITY_IMAGES[f.name] ?? DEFAULT_FACILITY_IMAGE,
         }))
       )
-      setActivities(actData.items ?? [])
+      setActivities(
+        (actData.items ?? []).map(a => ({
+          ...a,
+          image: ACTIVITY_IMAGES[a.name] ?? DEFAULT_ACTIVITY_IMAGE,
+        }))
+      )
     } catch (err) {
       console.error("Gagal memuat data:", err)
     } finally {
@@ -63,7 +70,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const ids = ["beranda","tentang","fasilitas","kegiatan"]
+    const ids = ["beranda","tentang","fasilitas","kegiatan","berita","kontak"]
     const obs = new IntersectionObserver(
       entries => entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id) }),
       { threshold: 0.35 }
@@ -137,16 +144,11 @@ function App() {
         </section>
       )}
 
-      {/* CTA BANNER */}
-      {!loading && (
-        <div className="cta-banner">
-          <h2 className="cta-title">Siap Berkunjung ke Kang Bejo?</h2>
-          <p className="cta-sub">Rasakan sendiri keindahan desa wisata edukasi di jantung Balikpapan</p>
-          <button className="btn-cta" onClick={() => scrollTo("tentang")}>
-            Pelajari Lebih Lanjut
-          </button>
-        </div>
-      )}
+      {/* BERITA */}
+      <NewsSection />
+
+      {/* KONTAK */}
+      <ContactSection />
 
       <PageFooter apiVersion={apiVersion} />
     </div>

@@ -12,7 +12,6 @@ function FacilityCard({ facility }) {
             e.target.style.display = "none"
           }}
         />
-        <span className="facility-img-icon">{facility.icon || "🌿"}</span>
       </div>
       <div className="facility-body">
         <h3 className="facility-name">{facility.name}</h3>

@@ -1,14 +1,15 @@
-function Navbar({ activeSection, onNavClick, isConnected, apiVersion }) {
+function Navbar({ activeSection, onNavClick }) {
   const navItems = [
     { key: "beranda",   label: "Beranda" },
     { key: "tentang",   label: "Tentang" },
     { key: "fasilitas", label: "Fasilitas" },
     { key: "kegiatan",  label: "Kegiatan" },
+    { key: "berita",    label: "Berita" },
+    { key: "kontak",    label: "Kontak" },
   ]
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <span className="brand-icon">🌿</span>
         <span className="brand-text">Kang Bejo</span>
       </div>
       <ul className="nav-links">
@@ -25,10 +26,6 @@ function Navbar({ activeSection, onNavClick, isConnected, apiVersion }) {
           </li>
         ))}
       </ul>
-      <span className="api-badge">
-        <span className={`dot${isConnected ? "" : " dot-error"}`}></span>
-        {isConnected ? `API v${apiVersion ?? "…"}` : "API offline"}
-      </span>
     </nav>
   )
 }

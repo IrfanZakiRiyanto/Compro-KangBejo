@@ -399,4 +399,30 @@ img   { display: block; max-width: 100%; }
   .footer-top { flex-direction:column; }
   .footer-links { gap:24px; }
   .footer-bottom { flex-direction:column; text-align:center; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .contact-map { grid-column: span 1; }
 }
+
+/* ── NEWS CARD ──────────────────────────────────────── */
+.news-card {
+  background: var(--white); border-radius: var(--r-lg);
+  overflow: hidden; box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+}
+.news-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.news-body { padding: 20px 24px; }
+.news-date { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; }
+.news-title { font-size: 1.1rem; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+.news-desc { font-size: 0.9rem; color: var(--text-muted); }
+
+/* ── CONTACT ────────────────────────────────────────── */
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px;
+}
+.contact-info { display: flex; flex-direction: column; gap: 24px; }
+.contact-item h4 { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.contact-item p { font-size: 1.05rem; font-weight: 600; color: var(--text-heading); }
+.social-links { display: flex; gap: 12px; }
+.social-links a { transition: opacity 0.2s; }
+.social-links a:hover { opacity: 0.7; }
+.contact-map { border-radius: var(--r-md); overflow: hidden; height: 300px; grid-column: span 2; }
