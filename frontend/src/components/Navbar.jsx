@@ -28,16 +28,17 @@ function Navbar({ activeSection, onNavClick, isConnected, apiVersion, brandText 
 
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
-      <div className="container nav-container">
+      <div className="container nav-container" style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
         
-        <div className="brand" onClick={() => handleNavClick('beranda')}>
-          <div className="brand-logo">🍃</div>
+        <div className="nav-brand" onClick={() => handleNavClick('beranda')} style={{ cursor: 'pointer' }}>
+          <div className="brand-icon">🍃</div>
           <span className="brand-text">{brandText}</span>
         </div>
 
         <button 
           className="mobile-menu-btn" 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          style={{ display: "none" }} /* Assuming App.css handles mobile menu button or we hide it for now */
         >
           {mobileMenuOpen ? "✕" : "☰"}
         </button>
@@ -46,16 +47,17 @@ function Navbar({ activeSection, onNavClick, isConnected, apiVersion, brandText 
           {navItems.map(item => (
             <button
               key={item.id}
-              className={`nav-item ${activeSection === item.id ? 'active' : ''}`}
+              className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
               onClick={() => handleNavClick(item.id)}
+              style={{ border: "none", background: "transparent", cursor: "pointer" }}
             >
               {item.label}
             </button>
           ))}
         </div>
 
-        <div className="nav-status" title={`API v${apiVersion}`}>
-          <div className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`}></div>
+        <div className="api-badge" title={`API v${apiVersion}`}>
+          <div className={`dot ${isConnected ? '' : 'dot-error'}`}></div>
           <span className="status-text">{isConnected ? 'Online' : 'Offline'}</span>
         </div>
 

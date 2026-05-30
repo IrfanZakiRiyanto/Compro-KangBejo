@@ -16,19 +16,16 @@ function NewsSection({ news = [], content = {} }) {
         <div className="news-grid">
           {news.map((item) => (
             <div key={item.id} className="news-card">
-              <div className="news-image-wrapper">
-                <img 
-                  src={item.media_id ? getMediaUrl(item.media_id) : "https://images.unsplash.com/photo-1595841696250-20c254b1f486?auto=format&fit=crop&q=80&w=400"} 
-                  alt={item.title} 
-                  className="news-image"
-                  loading="lazy"
-                />
+              <img 
+                src={item.media_id ? getMediaUrl(item.media_id) : "https://images.unsplash.com/photo-1595841696250-20c254b1f486?auto=format&fit=crop&q=80&w=400"} 
+                alt={item.title} 
+                className="news-img"
+                loading="lazy"
+              />
+              <div className="news-body">
                 <div className="news-date">{item.date}</div>
-              </div>
-              <div className="news-content">
                 <h3 className="news-title">{item.title}</h3>
-                <p className="news-excerpt">{item.description}</p>
-                <button className="news-read-more">Baca Selengkapnya &rarr;</button>
+                <p className="news-desc">{item.description}</p>
               </div>
             </div>
           ))}

@@ -22,23 +22,26 @@ function HeroSection({ facilityCount, activityCount, loading, onExplore, onActiv
     : { background: "linear-gradient(135deg, #2D6A4F 0%, #1B4332 100%)" }
 
   return (
-    <section id="beranda" className="hero-section" style={bgStyle}>
+    <section id="beranda" className="hero">
+      <div className="hero-bg" style={bgStyle}></div>
       <div className="hero-overlay"></div>
       
       <div className="hero-content">
-        <div className="hero-chip animate-fade-up">
+        <div className="hero-chip">
           {content.chip_text || "Desa Wisata Edukasi"}
         </div>
         
-        <h1 className="hero-title animate-fade-up" style={{ animationDelay: '0.1s', whiteSpace: 'pre-line' }}>
-          {content.title || "Selamat Datang di\nKang Bejo"}
+        <h1 className="hero-title" style={{ whiteSpace: 'pre-line' }}>
+          <span className="highlight">{content.title?.split('\n')[0]}</span>
+          {content.title?.includes('\n') && <br/>}
+          {content.title?.split('\n').slice(1).join('\n')}
         </h1>
         
-        <p className="hero-subtitle animate-fade-up" style={{ animationDelay: '0.2s', whiteSpace: 'pre-line' }}>
+        <p className="hero-subtitle" style={{ whiteSpace: 'pre-line' }}>
           {content.subtitle || "Wisata Alam, Edukasi & Budaya di Balikpapan —\nNikmati Pengalaman Bertani Kangkung yang Tak Terlupakan"}
         </p>
         
-        <div className="hero-buttons animate-fade-up" style={{ animationDelay: '0.3s' }}>
+        <div className="hero-actions">
           <button className="btn btn-primary btn-lg" onClick={onExplore}>
             {content.cta_primary || "Jelajahi Sekarang"}
           </button>
@@ -46,35 +49,31 @@ function HeroSection({ facilityCount, activityCount, loading, onExplore, onActiv
             {content.cta_secondary || "Lihat Kegiatan"}
           </button>
         </div>
-
-        {/* Indikator Gambar */}
-        {hasSlides && activeSlides.length > 1 && (
-          <div className="hero-indicators animate-fade-up" style={{ animationDelay: '0.4s' }}>
-            {activeSlides.map((_, index) => (
-              <div 
-                key={index} 
-                className={`indicator ${index === currentImageIndex ? 'active' : ''}`}
-                onClick={() => setCurrentImageIndex(index)}
-              ></div>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Hero Stats */}
-      <div className="hero-stats-container animate-fade-up" style={{ animationDelay: '0.5s' }}>
-        <div className="hero-stat-card">
-          <div className="hero-stat-number">{loading ? '...' : facilityCount}</div>
-          <div className="hero-stat-label">Fasilitas Tersedia</div>
+      <div style={{ position: "absolute", bottom: 120, left: 0, right: 0, zIndex: 2 }}>
+        <div className="hero-stats">
+          <div className="stat">
+            <span className="stat-num">{loading ? '...' : facilityCount}</span>
+            <span className="stat-label">Fasilitas</span>
+          </div>
+          <div className="stat-divider"></div>
+          <div className="stat">
+            <span className="stat-num">{loading ? '...' : activityCount}</span>
+            <span className="stat-label">Kegiatan</span>
+          </div>
+          <div className="stat-divider"></div>
+          <div className="stat">
+            <span className="stat-num">100%</span>
+            <span className="stat-label">Edukasi Alam</span>
+          </div>
         </div>
-        <div className="hero-stat-card">
-          <div className="hero-stat-number">{loading ? '...' : activityCount}</div>
-          <div className="hero-stat-label">Kegiatan Seru</div>
-        </div>
-        <div className="hero-stat-card">
-          <div className="hero-stat-number">100%</div>
-          <div className="hero-stat-label">Edukasi Alam</div>
-        </div>
+      </div>
+      
+      <div className="hero-scroll-hint">
+        <span>Scroll ke bawah</span>
+        <span className="scroll-arrow">↓</span>
       </div>
     </section>
   )

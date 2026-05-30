@@ -21,8 +21,8 @@ function AboutSection({ content = {}, facilityCount, activityCount }) {
         <div className="about-grid">
           
           {/* Bagian Kiri: Teks */}
-          <div className="about-text-content">
-            <p className="about-description">
+          <div className="about-text">
+            <p className="about-desc">
               {content.description || "Desa Wisata Kang Bejo adalah destinasi wisata edukasi unggulan di Balikpapan yang menghadirkan pengalaman belajar dan berwisata di tengah kebun kangkung. Pengunjung dapat menikmati berbagai fasilitas dan kegiatan seru yang memadukan alam, budaya, dan edukasi pertanian."}
             </p>
             
@@ -32,45 +32,26 @@ function AboutSection({ content = {}, facilityCount, activityCount }) {
               ))}
             </div>
 
-            <div className="about-highlights">
-              <div className="highlight-item">
-                <div className="highlight-icon">📍</div>
-                <div>
-                  <h4>Lokasi Strategis</h4>
-                  <p>{content.location || "Balikpapan, Kalimantan Timur"}</p>
-                </div>
+            <div className="about-stats">
+              <div className="about-stat">
+                <div className="about-stat-num">📍</div>
+                <div className="about-stat-label">{content.location || "Balikpapan, Kalimantan Timur"}</div>
               </div>
-              <div className="highlight-item">
-                <div className="highlight-icon">🏆</div>
-                <div>
-                  <h4>Berdiri Sejak</h4>
-                  <p>{content.founded_year || "2025"}</p>
-                </div>
+              <div className="about-stat">
+                <div className="about-stat-num">🏆</div>
+                <div className="about-stat-label">Berdiri Sejak {content.founded_year || "2025"}</div>
               </div>
             </div>
           </div>
 
           {/* Bagian Kanan: Gambar & Stats Mini */}
-          <div className="about-image-wrapper">
-            <div className="about-image-decoration"></div>
+          <div className="about-img-wrap">
             <img 
               src={imageUrl} 
               alt="Pemandangan Desa Wisata Kang Bejo" 
-              className="about-image"
+              className="about-img"
               loading="lazy"
             />
-            
-            <div className="about-floating-card">
-              <div className="floating-stat">
-                <span className="stat-value">{facilityCount || '...'}</span>
-                <span className="stat-label">Fasilitas</span>
-              </div>
-              <div className="floating-divider"></div>
-              <div className="floating-stat">
-                <span className="stat-value">{activityCount || '...'}</span>
-                <span className="stat-label">Kegiatan</span>
-              </div>
-            </div>
           </div>
 
         </div>
