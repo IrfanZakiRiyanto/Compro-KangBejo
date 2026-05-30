@@ -39,6 +39,32 @@ export async function fetchStats() {
   return handleResponse(await fetch(`${API_URL}/stats`))
 }
 
+// ── SITE CONTENT ──────────────────────────────────────
+export async function fetchSiteContent() {
+  return handleResponse(await fetch(`${API_URL}/site-content`))
+}
+
+export async function fetchSiteContentSection(section) {
+  return handleResponse(await fetch(`${API_URL}/site-content/${section}`))
+}
+
+// ── HERO SLIDES ───────────────────────────────────────
+export async function fetchHeroSlides() {
+  return handleResponse(await fetch(`${API_URL}/hero-slides`))
+}
+
+// ── NEWS ──────────────────────────────────────────────
+export async function fetchNews({ skip = 0, limit = 20 } = {}) {
+  const q = buildParams({ skip, limit })
+  return handleResponse(await fetch(`${API_URL}/news?${q}`))
+}
+
+// ── MEDIA URL HELPER ──────────────────────────────────
+export function getMediaUrl(mediaId) {
+  if (!mediaId) return null
+  return `${API_URL}/media/${mediaId}`
+}
+
 // ── FACILITIES ────────────────────────────────────────
 export async function fetchFacilities({ search = "", skip = 0, limit = 50, active_only = true } = {}) {
   const q = buildParams({ search, skip, limit, active_only })

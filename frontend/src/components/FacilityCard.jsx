@@ -3,13 +3,12 @@ function FacilityCard({ facility }) {
     <div id={`facility-${facility.id}`} className="facility-card">
       <div className="facility-img-wrap">
         <img
-          src={facility.image}
+          src={facility.image || "https://images.unsplash.com/photo-1595841696250-20c254b1f486?auto=format&fit=crop&q=80&w=400"}
           alt={facility.name}
           className="facility-img"
           loading="lazy"
           onError={e => {
-            // fallback jika Unsplash tidak bisa diakses
-            e.target.style.display = "none"
+            e.target.src = "https://images.unsplash.com/photo-1595841696250-20c254b1f486?auto=format&fit=crop&q=80&w=400"
           }}
         />
       </div>

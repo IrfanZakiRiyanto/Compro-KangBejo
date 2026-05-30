@@ -1,81 +1,83 @@
-import { useState, useEffect } from "react"
-import { HERO_IMAGES } from "../data/images"
+import { useState, useEffect } from 'react'
 
-function HeroSection({ facilityCount, activityCount, loading, onExplore, onActivities }) {
+function HeroSection({ facilityCount, activityCount, loading, onExplore, onActivities, slides = [], content = {} }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  
+  // Ambil hanya slide yang aktif
+  const activeSlides = slides.filter(s => s.is_active)
+  const hasSlides = activeSlides.length > 0
 
+  // Interval untuk merotasi gambar latar belakang
   useEffect(() => {
+    if (!hasSlides) return
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length)
+      setCurrentImageIndex((prev) => (prev + 1) % activeSlides.length)
     }, 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, [hasSlides, activeSlides.length])
+
+  // Fallback pattern jika tidak ada gambar
+  const bgStyle = hasSlides && activeSlides[currentImageIndex]?.imageUrl 
+    ? { backgroundImage: `url(${activeSlides[currentImageIndex].imageUrl})` }
+    : { background: "linear-gradient(135deg, #2D6A4F 0%, #1B4332 100%)" }
 
   return (
-    <section id="beranda" className="hero">
-      {/* Background images with transition */}
-      {HERO_IMAGES.map((img, index) => (
-        <div
-          key={img}
-          className={`hero-bg ${index === currentImageIndex ? "active" : ""}`}
-          style={{
-            backgroundImage: `url("${img}")`,
-            opacity: index === currentImageIndex ? 1 : 0,
-            transition: "opacity 1.5s ease-in-out",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: 1,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-      ))}
-      <div className="hero-overlay" style={{ zIndex: 2 }} />
-
-      <div className="hero-content" style={{ zIndex: 3 }}>
-        <div className="hero-chip">Desa Wisata Edukasi</div>
-        <h1 className="hero-title">
-          Selamat Datang di<br />
-          <span className="highlight">Kang Bejo</span>
+    <section id="beranda" className="hero-section" style={bgStyle}>
+      <div className="hero-overlay"></div>
+      
+      <div className="hero-content">
+        <div className="hero-chip animate-fade-up">
+          {content.chip_text || "Desa Wisata Edukasi"}
+        </div>
+        
+        <h1 className="hero-title animate-fade-up" style={{ animationDelay: '0.1s', whiteSpace: 'pre-line' }}>
+          {content.title || "Selamat Datang di\nKang Bejo"}
         </h1>
-        <p className="hero-subtitle">
-          Wisata Alam, Edukasi &amp; Budaya di Balikpapan —<br />
-          Nikmati Pengalaman Bertani Kangkung yang Tak Terlupakan
+        
+        <p className="hero-subtitle animate-fade-up" style={{ animationDelay: '0.2s', whiteSpace: 'pre-line' }}>
+          {content.subtitle || "Wisata Alam, Edukasi & Budaya di Balikpapan —\nNikmati Pengalaman Bertani Kangkung yang Tak Terlupakan"}
         </p>
-        <div className="hero-actions">
-          <button id="btn-jelajahi" className="btn btn-primary" onClick={onExplore}>
-            Jelajahi Sekarang
+        
+        <div className="hero-buttons animate-fade-up" style={{ animationDelay: '0.3s' }}>
+          <button className="btn btn-primary btn-lg" onClick={onExplore}>
+            {content.cta_primary || "Jelajahi Sekarang"}
           </button>
-          <button id="btn-kegiatan" className="btn btn-outline" onClick={onActivities}>
-            Lihat Kegiatan
+          <button className="btn btn-outline btn-lg" onClick={onActivities}>
+            {content.cta_secondary || "Lihat Kegiatan"}
           </button>
         </div>
-        <div className="hero-stats">
-          <div className="stat">
-            <span className="stat-num">{loading ? "…" : facilityCount}</span>
-            <span className="stat-label">Fasilitas</span>
+
+        {/* Indikator Gambar */}
+        {hasSlides && activeSlides.length > 1 && (
+          <div className="hero-indicators animate-fade-up" style={{ animationDelay: '0.4s' }}>
+            {activeSlides.map((_, index) => (
+              <div 
+                key={index} 
+                className={`indicator ${index === currentImageIndex ? 'active' : ''}`}
+                onClick={() => setCurrentImageIndex(index)}
+              ></div>
+            ))}
           </div>
-          <div className="stat-divider" />
-          <div className="stat">
-            <span className="stat-num">{loading ? "…" : activityCount}</span>
-            <span className="stat-label">Kegiatan</span>
-          </div>
-          <div className="stat-divider" />
-          <div className="stat">
-            <span className="stat-num">Kota</span>
-            <span className="stat-label">Balikpapan</span>
-          </div>
-        </div>
+        )}
       </div>
 
-      <div className="hero-scroll-hint" style={{ zIndex: 3 }}>
-        <span>Scroll ke bawah</span>
-        <span className="scroll-arrow">↓</span>
+      {/* Hero Stats */}
+      <div className="hero-stats-container animate-fade-up" style={{ animationDelay: '0.5s' }}>
+        <div className="hero-stat-card">
+          <div className="hero-stat-number">{loading ? '...' : facilityCount}</div>
+          <div className="hero-stat-label">Fasilitas Tersedia</div>
+        </div>
+        <div className="hero-stat-card">
+          <div className="hero-stat-number">{loading ? '...' : activityCount}</div>
+          <div className="hero-stat-label">Kegiatan Seru</div>
+        </div>
+        <div className="hero-stat-card">
+          <div className="hero-stat-number">100%</div>
+          <div className="hero-stat-label">Edukasi Alam</div>
+        </div>
       </div>
     </section>
   )
 }
+
 export default HeroSection

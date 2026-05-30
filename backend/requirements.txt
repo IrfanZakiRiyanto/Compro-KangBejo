@@ -4,6 +4,11 @@ sqlalchemy==2.0.35
 psycopg2-binary>=2.9.9
 python-dotenv==1.0.1
 
+# ── Admin CMS Dependencies ──
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.7
+
 # ── Testing (Modul 10: CI Pipeline) ──
 pytest==8.3.3
 pytest-cov==5.0.0

@@ -5,15 +5,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from database import engine, get_db
-from models import Base, Facility, Activity
+from models import Base, Facility, Activity, AdminUser, SiteContent, News
 from schemas import (
     FacilityCreate, FacilityUpdate, FacilityResponse, FacilityListResponse,
     ActivityCreate, ActivityUpdate, ActivityResponse, ActivityListResponse,
 )
+from admin_routes import admin_router, public_router
+from auth import hash_password
 import crud
 
-# ── Buat semua tabel di database (jika belum ada) ──
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Kang Bejo API",
@@ -22,7 +22,7 @@ app = FastAPI(
         "Desa Wisata Kang Bejo Balikpapan — "
         "Mata Kuliah Komputasi Awan, Institut Teknologi Kalimantan"
     ),
-    version="0.2.0",
+    version="0.3.0",
 )
 
 # ── CORS ──
@@ -34,14 +34,93 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ── Include routers ──
+app.include_router(public_router)
+app.include_router(admin_router)
+
 
 # ════════════════════════════════════════════════════════
 #  AUTO-SEED: Isi data awal jika tabel masih kosong
 # ════════════════════════════════════════════════════════
 
 def seed_initial_data(db: Session):
-    """Isi data fasilitas & kegiatan awal jika database masih kosong."""
+    """Isi data awal jika database masih kosong."""
 
+    # ── Admin default ──
+    if db.query(AdminUser).count() == 0:
+        admin = AdminUser(
+            username="admin",
+            password_hash=hash_password("kangbejo2024"),
+        )
+        db.add(admin)
+        db.commit()
+
+    # ── Site Content default ──
+    if db.query(SiteContent).count() == 0:
+        defaults = {
+            "navbar": {
+                "brand_text": "Kang Bejo",
+            },
+            "hero": {
+                "chip_text": "Desa Wisata Edukasi",
+                "title": "Selamat Datang di\nKang Bejo",
+                "subtitle": "Wisata Alam, Edukasi & Budaya di Balikpapan —\nNikmati Pengalaman Bertani Kangkung yang Tak Terlupakan",
+                "cta_primary": "Jelajahi Sekarang",
+                "cta_secondary": "Lihat Kegiatan",
+            },
+            "about": {
+                "chip": "Tentang Kami",
+                "name": "Desa Wisata Kang Bejo",
+                "tagline": "Desa Wisata Edukasi Penghasil Kangkung di Balikpapan",
+                "location": "Balikpapan, Kalimantan Timur",
+                "description": (
+                    "Desa Wisata Kang Bejo adalah destinasi wisata edukasi unggulan di Balikpapan "
+                    "yang menghadirkan pengalaman belajar dan berwisata di tengah kebun kangkung. "
+                    "Pengunjung dapat menikmati berbagai fasilitas dan kegiatan seru yang memadukan "
+                    "alam, budaya, dan edukasi pertanian."
+                ),
+                "founded_year": "2025",
+                "tags": "Wisata Alam,Edukasi,Budaya,Pertanian",
+                "media_id": "",
+            },
+            "facilities": {
+                "chip": "Fasilitas",
+                "title": "Apa yang Kami Sediakan",
+                "subtitle": "Nikmati berbagai fasilitas lengkap di Desa Wisata Kang Bejo",
+            },
+            "activities": {
+                "chip": "Kegiatan",
+                "title": "Aktivitas Seru Menanti",
+                "subtitle": "Berbagai kegiatan menarik yang bisa kamu ikuti bersama keluarga & teman",
+            },
+            "news": {
+                "chip": "Berita",
+                "title": "Kabar Terbaru",
+                "subtitle": "Ikuti terus perkembangan dan acara menarik di Desa Wisata Kang Bejo.",
+            },
+            "contact": {
+                "chip": "Kontak",
+                "title": "Siap Berkunjung ke Kang Bejo?",
+                "subtitle": "Rasakan sendiri keindahan desa wisata edukasi di jantung Balikpapan.\nPunya pertanyaan atau ingin reservasi? Hubungi kami segera.",
+                "address": "Jl. Sumber Rejo, RT. 12, Balikpapan Tengah, Kota Balikpapan",
+                "email": "info@kangbejo.com",
+                "phone": "(+62) 811 1234 5678",
+                "instagram": "#",
+                "facebook": "#",
+                "youtube": "#",
+                "maps_embed_url": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8893796594343!2d116.83981881475396!3d-1.236402699097727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df1473fb4e81561%3A0xc343fb608d0a0b63!2sDesa%20Wisata%20Kang%20Bejo!5e0!3m2!1sen!2sid!4v1689234857283!5m2!1sen!2sid",
+            },
+            "footer": {
+                "brand_name": "Kang Bejo",
+                "tagline": "Desa Wisata Edukasi Penghasil Kangkung — Balikpapan, Kalimantan Timur",
+            },
+        }
+        for section, pairs in defaults.items():
+            for key, value in pairs.items():
+                db.add(SiteContent(section=section, key=key, value=value))
+        db.commit()
+
+    # ── Fasilitas default ──
     if db.query(Facility).count() == 0:
         facilities = [
             Facility(
@@ -68,40 +147,27 @@ def seed_initial_data(db: Session):
         db.add_all(facilities)
         db.commit()
 
+    # ── Kegiatan default ──
     if db.query(Activity).count() == 0:
         activities = [
-            Activity(
-                name="Bazar Murah",
-                description="Pasar murah produk lokal dan hasil pertanian kangkung Kang Bejo.",
-                icon="🛒",
-            ),
-            Activity(
-                name="Jelajah Wisata",
-                description="Tur keliling area desa wisata dipandu pemandu berpengalaman.",
-                icon="🗺️",
-            ),
-            Activity(
-                name="Tari Daerah",
-                description="Pertunjukan tari daerah Kalimantan Timur yang memukau.",
-                icon="💃",
-            ),
-            Activity(
-                name="Geber Kang Bejo",
-                description="Olahraga bersama yang menyenangkan di alam terbuka desa wisata.",
-                icon="🏃",
-            ),
-            Activity(
-                name="Ruang Pintar",
-                description="Ruang belajar interaktif tentang pertanian modern dan lingkungan hidup.",
-                icon="🔬",
-            ),
-            Activity(
-                name="Tanam Kangkung",
-                description="Pengalaman seru menanam kangkung langsung di lahan kebun bersama petani lokal.",
-                icon="🌱",
-            ),
+            Activity(name="Bazar Murah", description="Pasar murah produk lokal dan hasil pertanian kangkung Kang Bejo.", icon="🛒"),
+            Activity(name="Jelajah Wisata", description="Tur keliling area desa wisata dipandu pemandu berpengalaman.", icon="🗺️"),
+            Activity(name="Tari Daerah", description="Pertunjukan tari daerah Kalimantan Timur yang memukau.", icon="💃"),
+            Activity(name="Geber Kang Bejo", description="Olahraga bersama yang menyenangkan di alam terbuka desa wisata.", icon="🏃"),
+            Activity(name="Ruang Pintar", description="Ruang belajar interaktif tentang pertanian modern dan lingkungan hidup.", icon="🔬"),
+            Activity(name="Tanam Kangkung", description="Pengalaman seru menanam kangkung langsung di lahan kebun bersama petani lokal.", icon="🌱"),
         ]
         db.add_all(activities)
+        db.commit()
+
+    # ── Berita default (sebelumnya hardcoded di frontend) ──
+    if db.query(News).count() == 0:
+        news_items = [
+            News(title="Panen Raya Kangkung Sukses Digelar", description="Warga desa bersama wisatawan ikut serta dalam panen kangkung tahun ini dengan hasil yang melimpah.", date="12 Agustus 2026", sort_order=0),
+            News(title="Penambahan Fasilitas Spot Foto Baru", description="Kini ada spot foto baru dengan pemandangan langsung ke kebun hijau yang memanjakan mata.", date="20 Juli 2026", sort_order=1),
+            News(title="Kunjungan Sekolah Alam Balikpapan", description="Anak-anak belajar bertani dengan cara yang menyenangkan di area Edukasi Kang Bejo.", date="5 Juni 2026", sort_order=2),
+        ]
+        db.add_all(news_items)
         db.commit()
 
 
@@ -112,6 +178,10 @@ def on_startup():
     # agar data awal tidak mencemari hasil tes
     if os.getenv("TESTING") == "true":
         return
+        
+    # ── Buat semua tabel di database (jika belum ada) ──
+    Base.metadata.create_all(bind=engine)
+    
     db = next(get_db())
     try:
         seed_initial_data(db)
@@ -129,7 +199,7 @@ def root():
     return {
         "message": "Selamat datang di API Desa Wisata Kang Bejo Balikpapan!",
         "status": "running",
-        "version": "0.2.0",
+        "version": "0.3.0",
         "docs": "/docs",
     }
 
@@ -145,24 +215,20 @@ def health_check(db: Session = Depends(get_db)):
 
     return {
         "status": "healthy",
-        "version": "0.2.0",
+        "version": "0.3.0",
         "database": db_status,
     }
 
 
 @app.get("/about")
-def about():
-    """Informasi umum Desa Wisata Kang Bejo."""
+def about(db: Session = Depends(get_db)):
+    """Informasi umum Desa Wisata Kang Bejo — diambil dari SiteContent."""
+    data = crud.get_site_content_by_section(db, "about")
     return {
-        "name": "Desa Wisata Kang Bejo",
-        "tagline": "Desa Wisata Edukasi Penghasil Kangkung di Balikpapan",
-        "location": "Balikpapan, Kalimantan Timur",
-        "description": (
-            "Desa Wisata Kang Bejo adalah destinasi wisata edukasi unggulan di Balikpapan "
-            "yang menghadirkan pengalaman belajar dan berwisata di tengah kebun kangkung. "
-            "Pengunjung dapat menikmati berbagai fasilitas dan kegiatan seru yang memadukan "
-            "alam, budaya, dan edukasi pertanian."
-        ),
+        "name": data.get("name", "Desa Wisata Kang Bejo"),
+        "tagline": data.get("tagline", ""),
+        "location": data.get("location", ""),
+        "description": data.get("description", ""),
     }
 
 
@@ -206,7 +272,7 @@ def stats(db: Session = Depends(get_db)):
 
 
 # ════════════════════════════════════════════════════════
-#  FACILITIES ENDPOINTS
+#  FACILITIES ENDPOINTS (public — tetap dipertahankan)
 # ════════════════════════════════════════════════════════
 
 @app.post("/facilities", response_model=FacilityResponse, status_code=201,
@@ -278,7 +344,7 @@ def delete_facility(facility_id: int, db: Session = Depends(get_db)):
 
 
 # ════════════════════════════════════════════════════════
-#  ACTIVITIES ENDPOINTS
+#  ACTIVITIES ENDPOINTS (public — tetap dipertahankan)
 # ════════════════════════════════════════════════════════
 
 @app.post("/activities", response_model=ActivityResponse, status_code=201,

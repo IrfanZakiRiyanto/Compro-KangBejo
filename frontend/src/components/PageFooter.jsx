@@ -1,48 +1,44 @@
-function PageFooter({ apiVersion }) {
-  const year = new Date().getFullYear()
+function PageFooter({ apiVersion, content = {} }) {
+  const currentYear = new Date().getFullYear()
+  const brandName = content.brand_name || "Kang Bejo"
+  const tagline = content.tagline || "Desa Wisata Edukasi Penghasil Kangkung — Balikpapan, Kalimantan Timur"
+  
   return (
     <footer className="footer">
-      <div className="footer-inner">
-        <div className="footer-top">
-          <div className="footer-brand-wrap">
-            <div className="footer-brand">
-              Kang Bejo
-            </div>
-            <p className="footer-tagline">
-              Desa Wisata Edukasi Penghasil Kangkung — Balikpapan, Kalimantan Timur
-            </p>
+      <div className="container">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <div className="footer-logo">🍃 {brandName}</div>
+            <p>{tagline}</p>
           </div>
+          
           <div className="footer-links">
-            <div className="footer-col">
-              <h4>Navigasi</h4>
-              <ul>
-                {["beranda","tentang","fasilitas","kegiatan","berita","kontak"].map(k => (
-                  <li key={k}>
-                    <a href={`#${k}`} style={{textTransform:"capitalize"}}>{k}</a>
-                  </li>
-                ))}
-              </ul>
+            <div className="link-group">
+              <h4>Jelajahi</h4>
+              <a href="#beranda">Beranda</a>
+              <a href="#tentang">Tentang Kami</a>
+              <a href="#fasilitas">Fasilitas</a>
+              <a href="#kegiatan">Kegiatan</a>
+              <a href="#berita">Berita</a>
             </div>
-            <div className="footer-col">
+            <div className="link-group">
               <h4>Informasi</h4>
-              <ul>
-                <li><a href="#tentang">Tentang Desa</a></li>
-                <li><a href="#fasilitas">Fasilitas</a></li>
-                <li><a href="#kegiatan">Kegiatan</a></li>
-                <li><a href="#berita">Berita Terbaru</a></li>
-                <li><a href="#kontak">Kontak & Lokasi</a></li>
-              </ul>
+              <a href="#kontak">Hubungi Kami</a>
+              <a href="#kontak">Lokasi Map</a>
+              <a href="/admin/login">Admin Login</a>
             </div>
           </div>
         </div>
+
         <div className="footer-bottom">
-          <span>© {year} Desa Wisata Kang Bejo. All rights reserved.</span>
-          {apiVersion && (
-            <span>API v{apiVersion} · KKN ITK Balikpapan</span>
-          )}
+          <p>&copy; {currentYear} {brandName}. Hak cipta dilindungi.</p>
+          <div className="footer-meta">
+            Proyek KKN ITK &middot; API v{apiVersion || "..."}
+          </div>
         </div>
       </div>
     </footer>
   )
 }
+
 export default PageFooter

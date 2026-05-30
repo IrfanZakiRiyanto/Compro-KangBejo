@@ -1,32 +1,67 @@
-function Navbar({ activeSection, onNavClick }) {
+import { useState, useEffect } from 'react'
+
+function Navbar({ activeSection, onNavClick, isConnected, apiVersion, brandText = "Kang Bejo" }) {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   const navItems = [
-    { key: "beranda",   label: "Beranda" },
-    { key: "tentang",   label: "Tentang" },
-    { key: "fasilitas", label: "Fasilitas" },
-    { key: "kegiatan",  label: "Kegiatan" },
-    { key: "berita",    label: "Berita" },
-    { key: "kontak",    label: "Kontak" },
+    { id: 'beranda', label: 'Beranda' },
+    { id: 'tentang', label: 'Tentang' },
+    { id: 'fasilitas', label: 'Fasilitas' },
+    { id: 'kegiatan', label: 'Kegiatan' },
+    { id: 'berita', label: 'Berita' },
+    { id: 'kontak', label: 'Kontak' },
   ]
+
+  const handleNavClick = (id) => {
+    onNavClick(id)
+    setMobileMenuOpen(false)
+  }
+
   return (
-    <nav className="navbar">
-      <div className="nav-brand">
-        <span className="brand-text">Kang Bejo</span>
-      </div>
-      <ul className="nav-links">
-        {navItems.map(item => (
-          <li key={item.key}>
-            <a
-              href={`#${item.key}`}
-              id={`nav-${item.key}`}
-              className={`nav-link${activeSection === item.key ? " active" : ""}`}
-              onClick={e => { e.preventDefault(); onNavClick(item.key) }}
+    <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+      <div className="container nav-container">
+        
+        <div className="brand" onClick={() => handleNavClick('beranda')}>
+          <div className="brand-logo">🍃</div>
+          <span className="brand-text">{brandText}</span>
+        </div>
+
+        <button 
+          className="mobile-menu-btn" 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? "✕" : "☰"}
+        </button>
+
+        <div className={`nav-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+          {navItems.map(item => (
+            <button
+              key={item.id}
+              className={`nav-item ${activeSection === item.id ? 'active' : ''}`}
+              onClick={() => handleNavClick(item.id)}
             >
               {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+            </button>
+          ))}
+        </div>
+
+        <div className="nav-status" title={`API v${apiVersion}`}>
+          <div className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`}></div>
+          <span className="status-text">{isConnected ? 'Online' : 'Offline'}</span>
+        </div>
+
+      </div>
     </nav>
   )
 }
+
 export default Navbar
