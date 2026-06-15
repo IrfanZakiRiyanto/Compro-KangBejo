@@ -10,14 +10,16 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    # Fallback: SQLite in-memory untuk testing di CI (tanpa PostgreSQL)
-    DATABASE_URL = "sqlite:///./test.db"
-    _SQLITE_ARGS = {"check_same_thread": False}
-else:
-    _SQLITE_ARGS = {}
+    # Fallback: SQLite local file untuk testing/development
+    DATABASE_URL = "sqlite:///./kangbejo.db"
+
+# Gunakan argument check_same_thread khusus untuk SQLite
+connect_args = {}
+if DATABASE_URL.startswith("sqlite"):
+    connect_args["check_same_thread"] = False
 
 # Buat engine (koneksi ke database)
-engine = create_engine(DATABASE_URL, connect_args=_SQLITE_ARGS)
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 
 # Buat session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

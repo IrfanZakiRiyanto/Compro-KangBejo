@@ -50,47 +50,90 @@ Desa Wisata Kang Bejo adalah destinasi wisata edukasi unggulan di Balikpapan yan
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Menjalankan Secara Lokal Tanpa Docker)
 
 ### Prasyarat
 - Python 3.10+
 - Node.js 18+
-- PostgreSQL 14+
 - Git
 
-### Setup Database
-```bash
-# 1. Login ke PostgreSQL
-psql -U postgres
+### Setup Database & Environment (.env)
 
-# 2. Buat database
-CREATE DATABASE kangbejo;
-\q
+Kami menyediakan 2 opsi database yang dapat digunakan secara lokal:
 
-# 3. Buat file backend/.env
-# Isi dengan:
-DATABASE_URL=postgresql://postgres:PASSWORD_KAMU@localhost:5432/kangbejo
-```
+#### Opsi A: SQLite (Sangat Direkomendasikan — Nol Konfigurasi & Sangat Ringan)
+Sangat cocok untuk mempermudah pengerjaan tugas atau saat menyerahkan proyek ke mitra desa yang tidak memiliki latar belakang IT.
+1. Salin template `.env.example` menjadi `.env` di folder `backend/`:
+   ```bash
+   # Di Windows CMD/PowerShell:
+   copy backend\.env.example backend\.env
+   # Di Bash/Linux/macOS:
+   cp backend/.env.example backend/.env
+   ```
+2. Pastikan isi `DATABASE_URL` di `backend/.env` adalah:
+   ```env
+   DATABASE_URL=sqlite:///./kangbejo.db
+   ```
+   *(File database `kangbejo.db` akan dibuat secara otomatis saat backend dijalankan pertama kali)*.
 
-### Backend
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-# Data fasilitas & kegiatan otomatis ter-seed saat pertama kali start
+#### Opsi B: PostgreSQL Lokal (Sesuai Panduan Modul 2 - 4)
+Gunakan ini jika diwajibkan oleh modul kuliah untuk menggunakan server PostgreSQL lokal.
+1. Jalankan PostgreSQL di komputer lokal Anda, lalu masuk via terminal:
+   ```bash
+   psql -U postgres
+   ```
+2. Buat database `kangbejo`:
+   ```sql
+   CREATE DATABASE kangbejo;
+   \q
+   ```
+3. Ubah isi `DATABASE_URL` di `backend/.env` menjadi:
+   ```env
+   DATABASE_URL=postgresql://postgres:PASSWORD_POSTGRES_ANDA@localhost:5432/kangbejo
+   ```
 
-# Buka browser: http://localhost:8000
-# Swagger UI: http://localhost:8000/docs
-```
+---
 
-### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
+### Langkah Menjalankan Aplikasi
 
-# Buka browser: http://localhost:5173
-```
+#### 1. Menjalankan Backend FastAPI
+1. Buka terminal dan masuk ke folder `backend`:
+   ```bash
+   cd backend
+   ```
+2. Install dependencies Python:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Jalankan server backend:
+   ```bash
+   uvicorn main:app --reload --port 8000
+   ```
+   * Backend berjalan di: [http://localhost:8000](http://localhost:8000)
+   * Dokumentasi Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+#### 2. Menjalankan Frontend React
+1. Buka terminal baru dan masuk ke folder `frontend`:
+   ```bash
+   cd frontend
+   ```
+2. Buat file `.env` jika belum ada:
+   ```bash
+   # Di Windows CMD/PowerShell:
+   copy .env.example .env
+   # Di Bash/Linux/macOS:
+   cp .env.example .env
+   ```
+   *Pastikan isinya adalah `VITE_API_URL=http://localhost:8000`*
+3. Install package node:
+   ```bash
+   npm install
+   ```
+4. Jalankan aplikasi web:
+   ```bash
+   npm run dev
+   ```
+   * Frontend berjalan di: [http://localhost:5173](http://localhost:5173) (atau port yang tertera di terminal)
 
 ---
 
