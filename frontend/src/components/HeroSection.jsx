@@ -70,9 +70,6 @@ function HeroSection({ facilityCount, activityCount, loading, onExplore, onActiv
           <button className="btn btn-primary btn-lg" onClick={onExplore}>
             {content.cta_primary || "Jelajahi Sekarang"}
           </button>
-          <button className="btn btn-outline btn-lg" onClick={onActivities}>
-            {content.cta_secondary || "Lihat Kegiatan"}
-          </button>
         </div>
       </div>
 

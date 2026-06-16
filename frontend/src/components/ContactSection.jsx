@@ -14,7 +14,11 @@ const getSafeMapUrl = (url) => {
   }
   
   // Jika sudah merupakan embed URL yang valid
-  if (trimmed.includes("google.com/maps/embed") || trimmed.includes("google.com/maps/embed?")) {
+  if (
+    trimmed.includes("google.com/maps/embed") || 
+    trimmed.includes("google.com/maps/embed?") || 
+    trimmed.includes("output=embed")
+  ) {
     return trimmed
   }
 

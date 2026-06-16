@@ -54,11 +54,6 @@ function Navbar({ activeSection, onNavClick, isConnected, apiVersion, brandText 
           ))}
         </div>
 
-        <div className="api-badge" title={`API v${apiVersion}`}>
-          <div className={`dot ${isConnected ? '' : 'dot-error'}`}></div>
-          <span className="status-text">{isConnected ? 'Online' : 'Offline'}</span>
-        </div>
-
       </div>
     </nav>
   )
