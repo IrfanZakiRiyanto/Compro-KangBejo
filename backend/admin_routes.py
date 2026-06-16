@@ -4,6 +4,57 @@ admin_routes.py — Semua endpoint admin CMS + endpoint publik baru
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
+import re
+import urllib.parse
+import requests
+
+def resolve_and_clean_maps_url(url: str) -> str:
+    if not url:
+        return ""
+    
+    url = url.strip()
+    
+    # 1. Jika itu tag iframe lengkap, ambil isi src="..."
+    src_match = re.search(r'src=["\'](https:[^"\']+)["\']', url, re.IGNORECASE)
+    if src_match:
+        url = src_match.group(1)
+
+    # 2. Jika merupakan short URL (misal maps.app.goo.gl atau goo.gl/maps)
+    if "maps.app.goo.gl" in url or "goo.gl/maps" in url:
+        try:
+            # Gunakan requests.head atau requests.get dengan allow_redirects=True untuk mengikuti redirect
+            # Tambahkan User-Agent agar Google Maps melayani permintaan dengan baik
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            }
+            response = requests.get(url, headers=headers, allow_redirects=True, timeout=5.0)
+            url = response.url
+        except Exception as e:
+            print(f"Error resolving redirect for {url}: {e}")
+            pass
+
+    # 3. Sekarang url adalah URL panjang Google Maps.
+    # Jika sudah merupakan URL embed yang valid
+    if "google.com/maps/embed" in url or "google.com/maps/embed?" in url:
+        return url
+
+    # Jika itu link Google Maps place, coba ekstrak nama tempat atau koordinat
+    # Struktur: /maps/place/PLACE_NAME/@lat,lng,...
+    place_match = re.search(r'/maps/place/([^/]+)', url)
+    if place_match:
+        place_name = urllib.parse.unquote_plus(place_match.group(1))
+        # Kembalikan link pencarian embed menggunakan nama tempat agar persis dan akurat!
+        return f"https://maps.google.com/maps?q={urllib.parse.quote(place_name)}&t=&z=16&ie=UTF8&iwloc=&output=embed"
+
+    # Jika tidak ada nama tempat tapi ada koordinat (misal /@lat,lng,...)
+    coords_match = re.search(r'/@(-?\d+\.\d+,-?\d+\.\d+)', url)
+    if coords_match:
+        coords = coords_match.group(1)
+        return f"https://maps.google.com/maps?q={coords}&t=&z=16&ie=UTF8&iwloc=&output=embed"
+
+    # Jika hanya alamat biasa / string pencarian bebas
+    return f"https://maps.google.com/maps?q={urllib.parse.quote(url)}&t=&z=16&ie=UTF8&iwloc=&output=embed"
+
 
 from database import get_db
 from auth import get_current_admin, hash_password, verify_password, create_access_token
@@ -73,6 +124,15 @@ def list_news(
 ):
     """Ambil daftar berita aktif — dipakai frontend compro."""
     return crud.get_all_news(db, skip=skip, limit=limit, active_only=True)
+
+
+@public_router.get("/news/{news_id}", response_model=NewsResponse)
+def get_single_news(news_id: int, db: Session = Depends(get_db)):
+    """Ambil satu berita berdasarkan ID — dipakai frontend compro."""
+    news = crud.get_news(db, news_id)
+    if not news:
+        raise HTTPException(status_code=404, detail="Berita tidak ditemukan")
+    return news
 
 
 # ══════════════════════════════════════════════════════════
@@ -182,7 +242,11 @@ def admin_update_content(
     admin: AdminUser = Depends(get_current_admin),
 ):
     """Update konten per section — upsert key-value pairs."""
-    data = crud.upsert_site_content(db, section, body.data)
+    payload = dict(body.data)
+    if section == "contact" and "maps_embed_url" in payload:
+        payload["maps_embed_url"] = resolve_and_clean_maps_url(payload["maps_embed_url"])
+        
+    data = crud.upsert_site_content(db, section, payload)
     return {"section": section, "data": data}
 
 

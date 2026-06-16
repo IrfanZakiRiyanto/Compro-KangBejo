@@ -2,6 +2,44 @@ import { useState, useEffect } from "react"
 import { getNews, createNews, updateNews, deleteNews, getMediaUrl, getAllSiteContent, updateSiteContent } from "../services/adminApi"
 import DataTable from "./components/DataTable"
 import ImageUpload from "./components/ImageUpload"
+import MediaPicker from "./components/MediaPicker"
+
+// Helper untuk format YYYY-MM-DD ke Indonesia (12 Agustus 2026)
+function formatIndonesianDate(dateStr) {
+  if (!dateStr) return "Baru saja"
+  const reg = /^\d{4}-\d{2}-\d{2}$/
+  if (!reg.test(dateStr)) return dateStr
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ]
+  const [year, month, day] = dateStr.split("-")
+  const monthIdx = parseInt(month, 10) - 1
+  return `${parseInt(day, 10)} ${months[monthIdx]} ${year}`
+}
+
+// Helper untuk konversi Indonesia (12 Agustus 2026) ke YYYY-MM-DD agar bisa di-edit oleh input date
+function convertToDateInputFormat(dateStr) {
+  if (!dateStr) return ""
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr
+  
+  const months = [
+    "januari", "februari", "maret", "april", "mei", "juni",
+    "juli", "agustus", "september", "oktober", "november", "desember"
+  ]
+  const parts = dateStr.toLowerCase().split(/\s+/)
+  if (parts.length === 3) {
+    const day = parts[0].padStart(2, '0')
+    const monthName = parts[1]
+    const year = parts[2]
+    const monthIdx = months.indexOf(monthName)
+    if (monthIdx !== -1 && /^\d{1,2}$/.test(parts[0]) && /^\d{4}$/.test(year)) {
+      const month = String(monthIdx + 1).padStart(2, '0')
+      return `${year}-${month}-${day}`
+    }
+  }
+  return ""
+}
 
 function AdminNews() {
   const [data, setData] = useState([])
@@ -12,6 +50,7 @@ function AdminNews() {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [formData, setFormData] = useState({ title: "", description: "", date: "", is_active: true, sort_order: 0, media_id: null })
+  const [showMediaPickerForEditor, setShowMediaPickerForEditor] = useState(false)
   
   // Section text state
   const [sectionText, setSectionText] = useState({})
@@ -59,9 +98,9 @@ function AdminNews() {
     setFormData({
       title: item.title,
       description: item.description || "",
-      date: item.date || "",
+      date: convertToDateInputFormat(item.date),
       is_active: item.is_active,
-      sort_order: item.sort_order,
+      sort_order: item.sort_order || 0,
       media_id: item.media_id
     })
     setEditingId(item.id)
@@ -75,6 +114,27 @@ function AdminNews() {
       showToast("Berita dihapus")
       fetchData()
     } catch (err) { alert(err.message) }
+  }
+
+  const handleInsertMedia = (mediaId) => {
+    const textarea = document.getElementById("news-description-textarea")
+    if (!textarea) {
+      setFormData({ ...formData, description: (formData.description || "") + ` [gambar:${mediaId}]` })
+      setShowMediaPickerForEditor(false)
+      return
+    }
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const text = formData.description || ""
+    const newText = text.substring(0, start) + ` [gambar:${mediaId}] ` + text.substring(end)
+    setFormData({ ...formData, description: newText })
+    setShowMediaPickerForEditor(false)
+    
+    setTimeout(() => {
+      textarea.focus()
+      const newCursorPos = start + ` [gambar:${mediaId}] `.length
+      textarea.setSelectionRange(newCursorPos, newCursorPos)
+    }, 50)
   }
 
   const handleSubmit = async (e) => {
@@ -102,9 +162,8 @@ function AdminNews() {
     },
     { 
       label: "Berita", 
-      render: (row) => <div><div style={{ fontWeight: 600 }}>{row.title}</div><div style={{ fontSize: 12, color: "var(--adm-text-muted)" }}>{row.date}</div></div>
+      render: (row) => <div><div style={{ fontWeight: 600 }}>{row.title}</div><div style={{ fontSize: 12, color: "var(--adm-text-muted)" }}>{formatIndonesianDate(row.date)}</div></div>
     },
-    { label: "Urutan", key: "sort_order" },
     { 
       label: "Status", 
       render: (row) => <span className={`adm-badge ${row.is_active ? 'adm-badge-active' : 'adm-badge-inactive'}`}>{row.is_active ? "Aktif" : "Non-aktif"}</span> 
@@ -175,18 +234,38 @@ function AdminNews() {
                 <input className="adm-input" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
               </div>
               <div className="adm-form-group">
-                <label className="adm-label">Isi / Deskripsi Singkat</label>
-                <textarea className="adm-textarea" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} required />
+                <label className="adm-label">Isi / Deskripsi Lengkap Berita</label>
+                <textarea 
+                  id="news-description-textarea"
+                  className="adm-textarea" 
+                  value={formData.description} 
+                  onChange={e => setFormData({...formData, description: e.target.value})} 
+                  style={{ minHeight: 180 }}
+                  required 
+                />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 }}>
+                  <span style={{ fontSize: "0.75rem", color: "var(--adm-text-muted)" }}>
+                    Tip: Gunakan <code>[gambar:ID]</code> untuk menyisipkan gambar tambahan di tengah paragraf berita.
+                  </span>
+                  <button 
+                    type="button" 
+                    className="adm-btn adm-btn-outline" 
+                    style={{ padding: "4px 12px", fontSize: "0.75rem", minHeight: "auto" }}
+                    onClick={() => setShowMediaPickerForEditor(true)}
+                  >
+                    🖼️ Sisipkan Gambar
+                  </button>
+                </div>
               </div>
-              <div className="adm-form-row">
-                <div className="adm-form-group">
-                  <label className="adm-label">Tanggal (Teks Bebas)</label>
-                  <input className="adm-input" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} placeholder="Contoh: 12 Agustus 2026" />
-                </div>
-                <div className="adm-form-group">
-                  <label className="adm-label">Urutan Tampil (0 = paling atas)</label>
-                  <input type="number" className="adm-input" value={formData.sort_order} onChange={e => setFormData({...formData, sort_order: e.target.value})} />
-                </div>
+              <div className="adm-form-group">
+                <label className="adm-label">Tanggal Berita</label>
+                <input 
+                  type="date" 
+                  className="adm-input" 
+                  value={formData.date} 
+                  onChange={e => setFormData({...formData, date: e.target.value})} 
+                  required 
+                />
               </div>
               <div className="adm-form-group">
                 <label className="adm-label">Status</label>
@@ -205,6 +284,12 @@ function AdminNews() {
             </form>
           </div>
         </div>
+      )}
+      {showMediaPickerForEditor && (
+        <MediaPicker 
+          onSelect={handleInsertMedia} 
+          onClose={() => setShowMediaPickerForEditor(false)} 
+        />
       )}
     </div>
   )

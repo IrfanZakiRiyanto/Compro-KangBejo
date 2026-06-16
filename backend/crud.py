@@ -343,7 +343,7 @@ def get_all_news(
     if active_only:
         query = query.filter(News.is_active == True)
     total = query.count()
-    items = query.order_by(News.sort_order.asc(), News.created_at.desc()).offset(skip).limit(limit).all()
+    items = query.order_by(News.date.desc(), News.created_at.desc()).offset(skip).limit(limit).all()
     return {"total": total, "items": items}
 
 

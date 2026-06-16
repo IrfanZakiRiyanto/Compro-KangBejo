@@ -59,6 +59,10 @@ export async function fetchNews({ skip = 0, limit = 20 } = {}) {
   return handleResponse(await fetch(`${API_URL}/news?${q}`))
 }
 
+export async function fetchSingleNews(id) {
+  return handleResponse(await fetch(`${API_URL}/news/${id}`))
+}
+
 // ── MEDIA URL HELPER ──────────────────────────────────
 export function getMediaUrl(mediaId) {
   if (!mediaId) return null

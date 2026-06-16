@@ -1,21 +1,37 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import SectionHeader from "./SectionHeader"
 import { getMediaUrl } from "../services/api"
 
+// Helper untuk format YYYY-MM-DD ke Indonesia (12 Agustus 2026)
+function formatIndonesianDate(dateStr) {
+  if (!dateStr) return "Baru saja"
+  const reg = /^\d{4}-\d{2}-\d{2}$/
+  if (!reg.test(dateStr)) return dateStr
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ]
+  const [year, month, day] = dateStr.split("-")
+  const monthIdx = parseInt(month, 10) - 1
+  return `${parseInt(day, 10)} ${months[monthIdx]} ${year}`
+}
+
 function NewsSection({ news = [], content = {} }) {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const navigate = useNavigate()
 
-  // Bagi berita menjadi kelompok berisi maksimal 3 berita per slide
-  const itemsPerSlide = 3
-  const chunkArray = (arr, size) => {
+  // Buat slide berita dengan jendela geser (sliding window) isi 3 berita
+  const makeSlides = (arr) => {
     if (!arr) return []
-    const chunks = []
-    for (let i = 0; i < arr.length; i += size) {
-      chunks.push(arr.slice(i, i + size))
+    if (arr.length <= 3) return [arr]
+    const slides = []
+    for (let i = 0; i <= arr.length - 3; i++) {
+      slides.push(arr.slice(i, i + 3))
     }
-    return chunks
+    return slides
   }
-  const newsSlides = chunkArray(news, itemsPerSlide)
+  const newsSlides = makeSlides(news)
 
   // Auto-play rotasi slide berita jika slide lebih dari 1
   useEffect(() => {
@@ -49,7 +65,7 @@ function NewsSection({ news = [], content = {} }) {
               <div key={slideIdx} className="news-slide">
                 <div className="news-slide-grid">
                   {slideItems.map((item) => (
-                    <div key={item.id} className="news-card">
+                    <div key={item.id} className="news-card" onClick={() => navigate(`/news/${item.id}`)}>
                       <img 
                         src={item.media_id ? getMediaUrl(item.media_id) : "https://images.unsplash.com/photo-1595841696250-20c254b1f486?auto=format&fit=crop&q=80&w=400"} 
                         alt={item.title} 
@@ -57,7 +73,7 @@ function NewsSection({ news = [], content = {} }) {
                         loading="lazy"
                       />
                       <div className="news-body">
-                        <div className="news-date">{item.date}</div>
+                        <div className="news-date">{formatIndonesianDate(item.date)}</div>
                         <h3 className="news-title">{item.title}</h3>
                         <p className="news-desc">{item.description}</p>
                       </div>

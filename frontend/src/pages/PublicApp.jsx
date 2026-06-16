@@ -87,6 +87,22 @@ function PublicApp() {
     return () => obs.disconnect()
   }, [loading])
 
+  // Scroll ke section dari query parameter (misal saat kembali dari detail berita)
+  useEffect(() => {
+    if (!loading) {
+      const params = new URLSearchParams(window.location.search)
+      const section = params.get("section")
+      if (section) {
+        const t = setTimeout(() => {
+          scrollTo(section)
+          // Bersihkan query param dari address bar agar tidak berulang
+          window.history.replaceState({}, document.title, window.location.pathname)
+        }, 300)
+        return () => clearTimeout(t)
+      }
+    }
+  }, [loading, scrollTo])
+
   // ── Helpers ──────────────────────────────────────
   const sc = (section, key, fallback = "") => siteContent?.[section]?.[key] ?? fallback
 
