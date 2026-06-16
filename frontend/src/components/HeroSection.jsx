@@ -16,17 +16,42 @@ function HeroSection({ facilityCount, activityCount, loading, onExplore, onActiv
     return () => clearInterval(interval)
   }, [hasSlides, activeSlides.length])
 
-  // Fallback pattern jika tidak ada gambar
-  const bgStyle = hasSlides && activeSlides[currentImageIndex]?.imageUrl 
-    ? { backgroundImage: `url(${activeSlides[currentImageIndex].imageUrl})` }
-    : { background: "linear-gradient(135deg, #1B4332 0%, #0D2418 100%)" }
-
   return (
     <section id="beranda" className="hero">
-      <div className="hero-bg" style={bgStyle}></div>
-      <div className="hero-overlay"></div>
+      {/* Background Slides dengan transisi smooth cross-fade */}
+      {hasSlides ? (
+        activeSlides.map((slide, idx) => {
+          const isActive = idx === currentImageIndex
+          return (
+            <div
+              key={slide.id}
+              className="hero-bg"
+              style={{
+                backgroundImage: `url(${slide.imageUrl})`,
+                opacity: isActive ? 1 : 0,
+                transition: "opacity 1.5s ease-in-out, transform 10s ease-out",
+                zIndex: isActive ? 1 : 0,
+                position: "absolute",
+                inset: 0
+              }}
+            />
+          )
+        })
+      ) : (
+        <div 
+          className="hero-bg" 
+          style={{ 
+            background: "linear-gradient(135deg, #1B4332 0%, #0D2418 100%)",
+            opacity: 1,
+            position: "absolute",
+            inset: 0,
+            zIndex: 1
+          }} 
+        />
+      )}
+      <div className="hero-overlay" style={{ zIndex: 2 }}></div>
       
-      <div className="hero-content">
+      <div className="hero-content" style={{ zIndex: 3 }}>
         <div className="hero-chip">
           {content.chip_text || "Desa Wisata Edukasi"}
         </div>
@@ -53,7 +78,7 @@ function HeroSection({ facilityCount, activityCount, loading, onExplore, onActiv
 
 
       
-      <div className="hero-scroll-hint">
+      <div className="hero-scroll-hint" style={{ zIndex: 3 }}>
         <span>Scroll ke bawah</span>
         <span className="scroll-arrow">↓</span>
       </div>

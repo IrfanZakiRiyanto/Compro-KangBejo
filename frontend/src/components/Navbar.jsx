@@ -48,7 +48,6 @@ function Navbar({ activeSection, onNavClick, isConnected, apiVersion, brandText 
               key={item.id}
               className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
               onClick={() => handleNavClick(item.id)}
-              style={{ border: "none", background: "transparent", cursor: "pointer" }}
             >
               {item.label}
             </button>

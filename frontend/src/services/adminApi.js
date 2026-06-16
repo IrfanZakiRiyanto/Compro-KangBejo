@@ -45,7 +45,17 @@ async function handleResponse(res) {
   }
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
-    throw new Error(err.detail || `HTTP ${res.status}`)
+    let errorMsg = `HTTP ${res.status}`
+    if (err.detail) {
+      if (typeof err.detail === 'string') {
+        errorMsg = err.detail
+      } else if (Array.isArray(err.detail)) {
+        errorMsg = err.detail.map(d => `${d.loc.join('.')}: ${d.msg}`).join(', ')
+      } else {
+        errorMsg = JSON.stringify(err.detail)
+      }
+    }
+    throw new Error(errorMsg)
   }
   if (res.status === 204) return true
   return res.json()

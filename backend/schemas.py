@@ -57,7 +57,7 @@ class MediaListResponse(BaseModel):
 
 class SiteContentUpdate(BaseModel):
     """Schema untuk update konten section — key-value pairs."""
-    data: dict[str, str | None] = Field(
+    data: dict[str, str | int | None] = Field(
         ...,
         examples=[{"title": "Judul Baru", "subtitle": "Subtitle Baru"}],
     )
@@ -80,7 +80,7 @@ class AllSiteContentResponse(BaseModel):
 
 class HeroSlideCreate(BaseModel):
     """Schema untuk membuat hero slide baru."""
-    media_id: int
+    media_id: Optional[int] = None
     sort_order: int = 0
     is_active: bool = True
 

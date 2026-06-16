@@ -102,7 +102,6 @@ function AdminFacilities() {
       label: "Nama Fasilitas", 
       render: (row) => <div><div style={{ fontWeight: 600 }}>{row.name}</div><div style={{ fontSize: 12, color: "var(--adm-text-muted)" }}>{row.description?.substring(0, 50)}...</div></div>
     },
-    { label: "Ikon", key: "icon" },
     { 
       label: "Status", 
       render: (row) => <span className={`adm-badge ${row.is_active ? 'adm-badge-active' : 'adm-badge-inactive'}`}>{row.is_active ? "Aktif" : "Non-aktif"}</span> 
@@ -176,18 +175,12 @@ function AdminFacilities() {
                 <label className="adm-label">Deskripsi</label>
                 <textarea className="adm-textarea" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} required />
               </div>
-              <div className="adm-form-row">
-                <div className="adm-form-group">
-                  <label className="adm-label">Ikon (Optional)</label>
-                  <input className="adm-input" value={formData.icon} onChange={e => setFormData({...formData, icon: e.target.value})} placeholder="Contoh: leaf" />
-                </div>
-                <div className="adm-form-group">
-                  <label className="adm-label">Status</label>
-                  <select className="adm-select" value={formData.is_active ? "true" : "false"} onChange={e => setFormData({...formData, is_active: e.target.value === "true"})}>
-                    <option value="true">Aktif</option>
-                    <option value="false">Non-aktif</option>
-                  </select>
-                </div>
+              <div className="adm-form-group">
+                <label className="adm-label">Status</label>
+                <select className="adm-select" value={formData.is_active ? "true" : "false"} onChange={e => setFormData({...formData, is_active: e.target.value === "true"})}>
+                  <option value="true">Aktif</option>
+                  <option value="false">Non-aktif</option>
+                </select>
               </div>
               <ImageUpload label="Gambar Fasilitas" value={formData.media_id} onChange={id => setFormData({...formData, media_id: id})} />
               
