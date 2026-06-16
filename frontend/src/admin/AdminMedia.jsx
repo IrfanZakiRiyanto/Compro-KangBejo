@@ -66,11 +66,11 @@ function AdminMedia() {
 
   return (
     <div>
-      {toast && <div className="ad-toast success">{toast}</div>}
-      <div className="ad-page-header">
+      {toast && <div className="adm-toast success">{toast}</div>}
+      <div className="adm-page-header">
         <div>
-          <h1 className="ad-page-title">Media Library</h1>
-          <p className="ad-page-subtitle">Kelola semua gambar dan video (Maksimal 5MB per file)</p>
+          <h1 className="adm-page-title">Media Library</h1>
+          <p className="adm-page-subtitle">Kelola semua gambar dan video (Maksimal 5MB per file)</p>
         </div>
         <div>
           <input
@@ -81,7 +81,7 @@ function AdminMedia() {
             accept="image/*,video/*"
           />
           <button
-            className="ad-btn ad-btn-primary"
+            className="adm-btn adm-btn-primary"
             onClick={handleUploadClick}
             disabled={uploading}
           >
@@ -90,20 +90,20 @@ function AdminMedia() {
         </div>
       </div>
 
-      <div className="ad-card">
+      <div className="adm-card">
         {loading ? (
-          <div className="ad-empty">Memuat library...</div>
+          <div className="adm-empty">Memuat library...</div>
         ) : media.length === 0 ? (
-          <div className="ad-empty">
-            <div className="ad-empty-icon">📁</div>
+          <div className="adm-empty">
+            <div className="adm-empty-icon">📁</div>
             <p>Belum ada file media yang diunggah.</p>
           </div>
         ) : (
-          <div className="ad-media-grid">
+          <div className="adm-media-grid">
             {media.map(item => (
               <div
                 key={item.id}
-                className="ad-media-item"
+                className="adm-media-item"
                 title={item.filename}
                 onClick={() => handleCopyLink(item.id)}
               >
@@ -112,11 +112,11 @@ function AdminMedia() {
                 ) : (
                   <img src={getMediaUrl(item.id)} alt={item.filename} />
                 )}
-                <div className="ad-media-item-overlay">
+                <div className="adm-media-item-overlay">
                   {item.filename.length > 20 ? item.filename.substring(0, 18) + '...' : item.filename}
                 </div>
                 <button 
-                  className="ad-media-item-delete"
+                  className="adm-media-item-delete"
                   onClick={(e) => handleDelete(item.id, e)}
                   title="Hapus permanen"
                 >

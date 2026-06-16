@@ -39,11 +39,11 @@ function MediaPicker({ onSelect, onClose }) {
   }
 
   return (
-    <div className="ad-modal-overlay" onClick={onClose}>
-      <div className="ad-modal ad-modal-lg" onClick={e => e.stopPropagation()}>
-        <div className="ad-modal-header">
-          <h2 className="ad-modal-title">Pilih Media</h2>
-          <button className="ad-modal-close" onClick={onClose}>&times;</button>
+    <div className="adm-modal-overlay" onClick={onClose}>
+      <div className="adm-modal adm-modal-lg" onClick={e => e.stopPropagation()}>
+        <div className="adm-modal-header">
+          <h2 className="adm-modal-title">Pilih Media</h2>
+          <button className="adm-modal-close" onClick={onClose}>&times;</button>
         </div>
 
         <div style={{ marginBottom: 20 }}>
@@ -55,24 +55,24 @@ function MediaPicker({ onSelect, onClose }) {
             accept="image/*,video/*"
           />
           <button
-            className="ad-btn ad-btn-primary"
+            className="adm-btn adm-btn-primary"
             onClick={handleUploadClick}
             disabled={uploading}
           >
-            {uploading ? "Mengunggah..." : "⬆️ Unggah File Baru"}
+            {uploading ? "Mengunggah..." : "Unggah File Baru"}
           </button>
         </div>
 
         {loading ? (
-          <div className="ad-empty">Memuat library...</div>
+          <div className="adm-empty">Memuat library...</div>
         ) : media.length === 0 ? (
-          <div className="ad-empty">Belum ada file media yang diunggah.</div>
+          <div className="adm-empty">Belum ada file media yang diunggah.</div>
         ) : (
-          <div className="ad-media-grid">
+          <div className="adm-media-grid">
             {media.map(item => (
               <div
                 key={item.id}
-                className="ad-media-item"
+                className="adm-media-item"
                 onClick={() => onSelect(item.id)}
               >
                 {item.mime_type.startsWith("video/") ? (

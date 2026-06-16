@@ -33,71 +33,71 @@ function AdminAbout() {
     }
   }
 
-  if (loading) return <div>Memuat...</div>
+  if (loading) return <div className="adm-loading">Memuat data...</div>
 
   return (
     <div>
-      {toast && <div className="ad-toast success">{toast}</div>}
-      <div className="ad-page-header">
+      {toast && <div className="adm-toast success">{toast}</div>}
+      <div className="adm-page-header">
         <div>
-          <h1 className="ad-page-title">Tentang Kami</h1>
-          <p className="ad-page-subtitle">Kelola informasi desa wisata dan profil singkat</p>
+          <h1 className="adm-page-title">Tentang Kami</h1>
+          <p className="adm-page-subtitle">Kelola informasi desa wisata dan profil singkat</p>
         </div>
       </div>
 
-      <div className="ad-card" style={{ maxWidth: 800 }}>
+      <div className="adm-card" style={{ maxWidth: 800 }}>
         <form onSubmit={handleSave}>
-          <div className="ad-form-row">
-            <div className="ad-form-group">
-              <label className="ad-label">Label (Chip)</label>
+          <div className="adm-form-row">
+            <div className="adm-form-group">
+              <label className="adm-label">Label (Chip)</label>
               <input
-                className="ad-input"
+                className="adm-input"
                 value={content.chip || ""}
                 onChange={e => setContent({...content, chip: e.target.value})}
               />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">Tahun Berdiri</label>
+            <div className="adm-form-group">
+              <label className="adm-label">Tahun Berdiri</label>
               <input
-                className="ad-input"
+                className="adm-input"
                 value={content.founded_year || ""}
                 onChange={e => setContent({...content, founded_year: e.target.value})}
               />
             </div>
           </div>
 
-          <div className="ad-form-group">
-            <label className="ad-label">Nama Tempat</label>
+          <div className="adm-form-group">
+            <label className="adm-label">Nama Tempat</label>
             <input
-              className="ad-input"
+              className="adm-input"
               value={content.name || ""}
               onChange={e => setContent({...content, name: e.target.value})}
               required
             />
           </div>
 
-          <div className="ad-form-group">
-            <label className="ad-label">Tagline Singkat</label>
+          <div className="adm-form-group">
+            <label className="adm-label">Tagline Singkat</label>
             <input
-              className="ad-input"
+              className="adm-input"
               value={content.tagline || ""}
               onChange={e => setContent({...content, tagline: e.target.value})}
             />
           </div>
 
-          <div className="ad-form-group">
-            <label className="ad-label">Lokasi</label>
+          <div className="adm-form-group">
+            <label className="adm-label">Lokasi</label>
             <input
-              className="ad-input"
+              className="adm-input"
               value={content.location || ""}
               onChange={e => setContent({...content, location: e.target.value})}
             />
           </div>
 
-          <div className="ad-form-group">
-            <label className="ad-label">Deskripsi Lengkap</label>
+          <div className="adm-form-group">
+            <label className="adm-label">Deskripsi Lengkap</label>
             <textarea
-              className="ad-textarea"
+              className="adm-textarea"
               value={content.description || ""}
               onChange={e => setContent({...content, description: e.target.value})}
               style={{ minHeight: 160 }}
@@ -105,10 +105,10 @@ function AdminAbout() {
             />
           </div>
 
-          <div className="ad-form-group">
-            <label className="ad-label">Tags (Pisahkan dengan koma)</label>
+          <div className="adm-form-group">
+            <label className="adm-label">Tags (Pisahkan dengan koma)</label>
             <input
-              className="ad-input"
+              className="adm-input"
               value={content.tags || ""}
               onChange={e => setContent({...content, tags: e.target.value})}
               placeholder="Contoh: Wisata Alam, Edukasi, Budaya"
@@ -123,7 +123,7 @@ function AdminAbout() {
             />
           </div>
 
-          <button type="submit" className="ad-btn ad-btn-primary" disabled={saving}>
+          <button type="submit" className="adm-btn adm-btn-primary" disabled={saving}>
             {saving ? "Menyimpan..." : "Simpan Perubahan"}
           </button>
         </form>

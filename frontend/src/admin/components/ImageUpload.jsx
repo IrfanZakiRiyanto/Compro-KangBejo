@@ -11,16 +11,16 @@ function ImageUpload({ label, value, onChange }) {
   }
 
   return (
-    <div className="ad-form-group">
-      <label className="ad-label">{label}</label>
+    <div className="adm-form-group">
+      <label className="adm-label">{label}</label>
       
       {value ? (
         <div style={{ marginBottom: 12 }}>
-          <div className="ad-upload-preview">
+          <div className="adm-upload-preview">
             <img src={getMediaUrl(value)} alt="Preview" />
             <button
               type="button"
-              className="ad-upload-preview-remove"
+              className="adm-upload-preview-remove"
               onClick={() => onChange(null)}
               title="Hapus gambar"
             >
@@ -30,11 +30,11 @@ function ImageUpload({ label, value, onChange }) {
         </div>
       ) : (
         <div 
-          className="ad-upload-zone" 
+          className="adm-upload-zone" 
           onClick={() => setShowPicker(true)}
           style={{ padding: "20px", marginBottom: 12 }}
         >
-          <div className="ad-upload-zone-icon">🖼️</div>
+          <div className="adm-upload-zone-icon" style={{ fontSize: "2.5rem", fontWeight: 300, lineHeight: 1 }}>+</div>
           <p>Pilih Gambar / Video</p>
         </div>
       )}

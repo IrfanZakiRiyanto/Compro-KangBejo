@@ -15,8 +15,8 @@ function AdminHeader() {
       <div className="admin-header-title">Content Management System</div>
       
       <div className="admin-header-right">
-        <a href="/" target="_blank" rel="noreferrer" className="ad-btn ad-btn-outline ad-btn-sm">
-          👁️ Lihat Website
+        <a href="/" target="_blank" rel="noreferrer" className="adm-btn adm-btn-outline adm-btn-sm">
+          Lihat Website
         </a>
         <div className="admin-header-user">
           <div className="admin-header-dot"></div>

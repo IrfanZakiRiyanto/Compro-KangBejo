@@ -31,7 +31,6 @@ function Navbar({ activeSection, onNavClick, isConnected, apiVersion, brandText 
       <div className="container nav-container" style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
         
         <div className="nav-brand" onClick={() => handleNavClick('beranda')} style={{ cursor: 'pointer' }}>
-          <div className="brand-icon">🍃</div>
           <span className="brand-text">{brandText}</span>
         </div>
 

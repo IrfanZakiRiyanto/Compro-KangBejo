@@ -95,89 +95,89 @@ function AdminHero() {
     }
   }
 
-  if (loading) return <div>Memuat...</div>
+  if (loading) return <div className="adm-loading">Memuat data...</div>
 
   return (
     <div>
-      {toast && <div className="ad-toast success">{toast}</div>}
-      <div className="ad-page-header">
+      {toast && <div className="adm-toast success">{toast}</div>}
+      <div className="adm-page-header">
         <div>
-          <h1 className="ad-page-title">Hero Section & Slides</h1>
-          <p className="ad-page-subtitle">Kelola teks sambutan dan gambar latar belakang berputar</p>
+          <h1 className="adm-page-title">Hero Section & Slides</h1>
+          <p className="adm-page-subtitle">Kelola teks sambutan dan gambar latar belakang berputar</p>
         </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
         {/* Editor Teks */}
-        <div className="ad-card">
-          <div className="ad-card-header">
-            <h2 className="ad-card-title">Teks Konten</h2>
+        <div className="adm-card">
+          <div className="adm-card-header">
+            <h2 className="adm-card-title">Teks Konten</h2>
           </div>
           <form onSubmit={handleSaveContent}>
-            <div className="ad-form-group">
-              <label className="ad-label">Label (Chip)</label>
+            <div className="adm-form-group">
+              <label className="adm-label">Label (Chip)</label>
               <input
-                className="ad-input"
+                className="adm-input"
                 value={content.chip_text || ""}
                 onChange={e => setContent({...content, chip_text: e.target.value})}
               />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">Judul Utama</label>
+            <div className="adm-form-group">
+              <label className="adm-label">Judul Utama</label>
               <textarea
-                className="ad-textarea"
+                className="adm-textarea"
                 value={content.title || ""}
                 onChange={e => setContent({...content, title: e.target.value})}
                 style={{ minHeight: 80 }}
               />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">Subjudul</label>
+            <div className="adm-form-group">
+              <label className="adm-label">Subjudul</label>
               <textarea
-                className="ad-textarea"
+                className="adm-textarea"
                 value={content.subtitle || ""}
                 onChange={e => setContent({...content, subtitle: e.target.value})}
                 style={{ minHeight: 120 }}
               />
             </div>
-            <div className="ad-form-row">
-              <div className="ad-form-group">
-                <label className="ad-label">Teks Tombol 1</label>
+            <div className="adm-form-row">
+              <div className="adm-form-group">
+                <label className="adm-label">Teks Tombol 1</label>
                 <input
-                  className="ad-input"
+                  className="adm-input"
                   value={content.cta_primary || ""}
                   onChange={e => setContent({...content, cta_primary: e.target.value})}
                 />
               </div>
-              <div className="ad-form-group">
-                <label className="ad-label">Teks Tombol 2</label>
+              <div className="adm-form-group">
+                <label className="adm-label">Teks Tombol 2</label>
                 <input
-                  className="ad-input"
+                  className="adm-input"
                   value={content.cta_secondary || ""}
                   onChange={e => setContent({...content, cta_secondary: e.target.value})}
                 />
               </div>
             </div>
-            <button type="submit" className="ad-btn ad-btn-primary" disabled={saving}>
+            <button type="submit" className="adm-btn adm-btn-primary" disabled={saving}>
               {saving ? "Menyimpan..." : "Simpan Teks"}
             </button>
           </form>
         </div>
 
         {/* Editor Slides */}
-        <div className="ad-card">
-          <div className="ad-card-header">
-            <h2 className="ad-card-title">Background Slides</h2>
-            <button type="button" className="ad-btn ad-btn-outline ad-btn-sm" onClick={handleAddSlide}>
+        <div className="adm-card">
+          <div className="adm-card-header">
+            <h2 className="adm-card-title">Background Slides</h2>
+            <button type="button" className="adm-btn adm-btn-outline adm-btn-sm" onClick={handleAddSlide}>
               + Tambah Slide
             </button>
           </div>
           
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {slides.length === 0 && <div className="ad-empty">Belum ada slide</div>}
+            {slides.length === 0 && <div className="adm-empty">Belum ada slide</div>}
             
             {slides.map((slide, i) => (
-              <div key={slide.id} style={{ border: "1px solid var(--ad-border)", borderRadius: 12, padding: 16, display: "flex", gap: 16, background: slide.is_active ? "transparent" : "#f1f5f9" }}>
+              <div key={slide.id} style={{ border: "1px solid var(--adm-border)", borderRadius: 12, padding: 16, display: "flex", gap: 16, background: slide.is_active ? "transparent" : "#f1f5f9" }}>
                 <div style={{ width: 120 }}>
                   <ImageUpload 
                     label="" 
@@ -188,22 +188,23 @@ function AdminHero() {
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                   <div>
                     <div style={{ fontWeight: 600, fontSize: "1rem" }}>Slide {i + 1}</div>
-                    <div style={{ fontSize: ".8rem", color: slide.is_active ? "var(--ad-success)" : "var(--ad-danger)" }}>
+                    <div style={{ fontSize: ".8rem", color: slide.is_active ? "var(--adm-success)" : "var(--adm-danger)" }}>
                       {slide.is_active ? "Aktif" : "Non-aktif"}
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                    <button className="ad-btn-icon" onClick={() => moveSlide(i, -1)} disabled={i === 0}>⬆️</button>
-                    <button className="ad-btn-icon" onClick={() => moveSlide(i, 1)} disabled={i === slides.length - 1}>⬇️</button>
+                    <button className="adm-btn adm-btn-outline adm-btn-sm" style={{ minWidth: 36, height: 32, padding: 0 }} onClick={() => moveSlide(i, -1)} disabled={i === 0}>▲</button>
+                    <button className="adm-btn adm-btn-outline adm-btn-sm" style={{ minWidth: 36, height: 32, padding: 0 }} onClick={() => moveSlide(i, 1)} disabled={i === slides.length - 1}>▼</button>
                     <div style={{ flex: 1 }} />
                     <button 
-                      className={`ad-btn-icon ${slide.is_active ? "danger" : ""}`} 
+                      className={`adm-btn adm-btn-outline adm-btn-sm ${slide.is_active ? "danger" : ""}`}
+                      style={{ height: 32, padding: "0 12px" }}
                       onClick={() => handleToggleSlideActive(slide)}
                       title={slide.is_active ? "Non-aktifkan" : "Aktifkan"}
                     >
-                      {slide.is_active ? "👁️" : "🙈"}
+                      {slide.is_active ? "Sembunyikan" : "Tampilkan"}
                     </button>
-                    <button className="ad-btn-icon danger" onClick={() => handleDeleteSlide(slide.id)}>🗑️</button>
+                    <button className="adm-btn adm-btn-outline danger adm-btn-sm" style={{ height: 32, padding: "0 12px" }} onClick={() => handleDeleteSlide(slide.id)}>Hapus</button>
                   </div>
                 </div>
               </div>

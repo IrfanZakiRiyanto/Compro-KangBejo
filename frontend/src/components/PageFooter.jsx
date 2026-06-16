@@ -9,7 +9,7 @@ function PageFooter({ apiVersion, content = {} }) {
         <div className="footer-inner">
           <div className="footer-top">
             <div className="footer-brand-wrap">
-              <div className="footer-brand">🍃 {brandName}</div>
+              <div className="footer-brand">{brandName}</div>
               <p className="footer-tagline">{tagline}</p>
             </div>
             

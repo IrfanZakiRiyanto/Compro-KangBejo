@@ -98,60 +98,60 @@ function AdminNews() {
   const columns = [
     { 
       label: "Gambar", 
-      render: (row) => row.media_id ? <img src={getMediaUrl(row.media_id)} className="ad-table-img" alt={row.title} /> : <div className="ad-table-img" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>🖼️</div>
+      render: (row) => row.media_id ? <img src={getMediaUrl(row.media_id)} className="adm-table-img" alt={row.title} /> : <div className="adm-table-img" style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "var(--adm-text-muted)" }}>No Image</div>
     },
     { 
       label: "Berita", 
-      render: (row) => <div><div style={{ fontWeight: 600 }}>{row.title}</div><div style={{ fontSize: 12, color: "var(--ad-text-muted)" }}>{row.date}</div></div>
+      render: (row) => <div><div style={{ fontWeight: 600 }}>{row.title}</div><div style={{ fontSize: 12, color: "var(--adm-text-muted)" }}>{row.date}</div></div>
     },
     { label: "Urutan", key: "sort_order" },
     { 
       label: "Status", 
-      render: (row) => <span className={`ad-badge ${row.is_active ? 'ad-badge-active' : 'ad-badge-inactive'}`}>{row.is_active ? "Aktif" : "Non-aktif"}</span> 
+      render: (row) => <span className={`adm-badge ${row.is_active ? 'adm-badge-active' : 'adm-badge-inactive'}`}>{row.is_active ? "Aktif" : "Non-aktif"}</span> 
     }
   ]
 
-  if (loading) return <div>Memuat...</div>
+  if (loading) return <div className="adm-loading">Memuat data...</div>
 
   return (
     <div>
-      {toast && <div className="ad-toast success">{toast}</div>}
-      <div className="ad-page-header">
+      {toast && <div className="adm-toast success">{toast}</div>}
+      <div className="adm-page-header">
         <div>
-          <h1 className="ad-page-title">Berita & Kabar Terbaru</h1>
-          <p className="ad-page-subtitle">Kelola berita, acara, atau pengumuman</p>
+          <h1 className="adm-page-title">Berita & Kabar Terbaru</h1>
+          <p className="adm-page-subtitle">Kelola berita, acara, atau pengumuman</p>
         </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 32, alignItems: "start" }}>
         
         {/* Kolom Kiri: Teks Section */}
-        <div className="ad-card">
-          <div className="ad-card-header"><h2 className="ad-card-title">Teks Section</h2></div>
+        <div className="adm-card">
+          <div className="adm-card-header"><h2 className="adm-card-title">Teks Section</h2></div>
           <form onSubmit={handleSaveText}>
-            <div className="ad-form-group">
-              <label className="ad-label">Label (Chip)</label>
-              <input className="ad-input" value={sectionText.chip || ""} onChange={e => setSectionText({...sectionText, chip: e.target.value})} />
+            <div className="adm-form-group">
+              <label className="adm-label">Label (Chip)</label>
+              <input className="adm-input" value={sectionText.chip || ""} onChange={e => setSectionText({...sectionText, chip: e.target.value})} />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">Judul Utama</label>
-              <input className="ad-input" value={sectionText.title || ""} onChange={e => setSectionText({...sectionText, title: e.target.value})} />
+            <div className="adm-form-group">
+              <label className="adm-label">Judul Utama</label>
+              <input className="adm-input" value={sectionText.title || ""} onChange={e => setSectionText({...sectionText, title: e.target.value})} />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">Subjudul</label>
-              <textarea className="ad-textarea" value={sectionText.subtitle || ""} onChange={e => setSectionText({...sectionText, subtitle: e.target.value})} style={{ minHeight: 80 }} />
+            <div className="adm-form-group">
+              <label className="adm-label">Subjudul</label>
+              <textarea className="adm-textarea" value={sectionText.subtitle || ""} onChange={e => setSectionText({...sectionText, subtitle: e.target.value})} style={{ minHeight: 80 }} />
             </div>
-            <button type="submit" className="ad-btn ad-btn-primary" disabled={savingText}>
+            <button type="submit" className="adm-btn adm-btn-primary" disabled={savingText}>
               {savingText ? "Menyimpan..." : "Simpan Teks"}
             </button>
           </form>
         </div>
 
         {/* Kolom Kanan: Tabel Data */}
-        <div className="ad-card">
-          <div className="ad-card-header">
-            <h2 className="ad-card-title">Daftar Berita</h2>
-            <button className="ad-btn ad-btn-primary" onClick={() => { resetForm(); setShowForm(true) }}>
+        <div className="adm-card">
+          <div className="adm-card-header">
+            <h2 className="adm-card-title">Daftar Berita</h2>
+            <button className="adm-btn adm-btn-primary" onClick={() => { resetForm(); setShowForm(true) }}>
               + Tambah Berita
             </button>
           </div>
@@ -163,34 +163,34 @@ function AdminNews() {
 
       {/* Modal Form Tambah/Edit */}
       {showForm && (
-        <div className="ad-modal-overlay" onClick={resetForm}>
-          <div className="ad-modal" onClick={e => e.stopPropagation()}>
-            <div className="ad-modal-header">
-              <h2 className="ad-modal-title">{editingId ? "Edit Berita" : "Tambah Berita"}</h2>
-              <button className="ad-modal-close" onClick={resetForm}>&times;</button>
+        <div className="adm-modal-overlay" onClick={resetForm}>
+          <div className="adm-modal" onClick={e => e.stopPropagation()}>
+            <div className="adm-modal-header">
+              <h2 className="adm-modal-title">{editingId ? "Edit Berita" : "Tambah Berita"}</h2>
+              <button className="adm-modal-close" onClick={resetForm}>&times;</button>
             </div>
             <form onSubmit={handleSubmit}>
-              <div className="ad-form-group">
-                <label className="ad-label">Judul Berita</label>
-                <input className="ad-input" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
+              <div className="adm-form-group">
+                <label className="adm-label">Judul Berita</label>
+                <input className="adm-input" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
               </div>
-              <div className="ad-form-group">
-                <label className="ad-label">Isi / Deskripsi Singkat</label>
-                <textarea className="ad-textarea" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} required />
+              <div className="adm-form-group">
+                <label className="adm-label">Isi / Deskripsi Singkat</label>
+                <textarea className="adm-textarea" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} required />
               </div>
-              <div className="ad-form-row">
-                <div className="ad-form-group">
-                  <label className="ad-label">Tanggal (Teks Bebas)</label>
-                  <input className="ad-input" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} placeholder="Contoh: 12 Agustus 2026" />
+              <div className="adm-form-row">
+                <div className="adm-form-group">
+                  <label className="adm-label">Tanggal (Teks Bebas)</label>
+                  <input className="adm-input" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} placeholder="Contoh: 12 Agustus 2026" />
                 </div>
-                <div className="ad-form-group">
-                  <label className="ad-label">Urutan Tampil (0 = paling atas)</label>
-                  <input type="number" className="ad-input" value={formData.sort_order} onChange={e => setFormData({...formData, sort_order: e.target.value})} />
+                <div className="adm-form-group">
+                  <label className="adm-label">Urutan Tampil (0 = paling atas)</label>
+                  <input type="number" className="adm-input" value={formData.sort_order} onChange={e => setFormData({...formData, sort_order: e.target.value})} />
                 </div>
               </div>
-              <div className="ad-form-group">
-                <label className="ad-label">Status</label>
-                <select className="ad-select" value={formData.is_active ? "true" : "false"} onChange={e => setFormData({...formData, is_active: e.target.value === "true"})}>
+              <div className="adm-form-group">
+                <label className="adm-label">Status</label>
+                <select className="adm-select" value={formData.is_active ? "true" : "false"} onChange={e => setFormData({...formData, is_active: e.target.value === "true"})}>
                   <option value="true">Aktif</option>
                   <option value="false">Non-aktif</option>
                 </select>
@@ -198,9 +198,9 @@ function AdminNews() {
               
               <ImageUpload label="Gambar Berita" value={formData.media_id} onChange={id => setFormData({...formData, media_id: id})} />
               
-              <div className="ad-form-actions">
-                <button type="submit" className="ad-btn ad-btn-primary">Simpan</button>
-                <button type="button" className="ad-btn ad-btn-outline" onClick={resetForm}>Batal</button>
+              <div className="adm-form-actions">
+                <button type="submit" className="adm-btn adm-btn-primary">Simpan</button>
+                <button type="button" className="adm-btn adm-btn-outline" onClick={resetForm}>Batal</button>
               </div>
             </form>
           </div>

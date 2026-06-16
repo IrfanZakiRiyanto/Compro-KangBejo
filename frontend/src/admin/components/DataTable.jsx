@@ -1,11 +1,11 @@
 function DataTable({ columns, data, onEdit, onDelete }) {
   if (!data || data.length === 0) {
-    return <div className="ad-empty">Belum ada data</div>
+    return <div className="adm-empty">Belum ada data</div>
   }
 
   return (
     <div style={{ overflowX: "auto" }}>
-      <table className="ad-table">
+      <table className="adm-table">
         <thead>
           <tr>
             {columns.map((col, i) => (
@@ -23,12 +23,12 @@ function DataTable({ columns, data, onEdit, onDelete }) {
                 </td>
               ))}
               <td style={{ textAlign: "right" }}>
-                <div className="ad-table-actions" style={{ justifyContent: "flex-end" }}>
-                  <button className="ad-btn-icon" onClick={() => onEdit(row)} title="Edit">
-                    ✏️
+                <div className="adm-table-actions" style={{ justifyContent: "flex-end" }}>
+                  <button className="adm-btn adm-btn-outline adm-btn-sm" style={{ marginRight: 8 }} onClick={() => onEdit(row)} title="Edit">
+                    Edit
                   </button>
-                  <button className="ad-btn-icon danger" onClick={() => onDelete(row)} title="Hapus">
-                    🗑️
+                  <button className="adm-btn adm-btn-outline danger adm-btn-sm" onClick={() => onDelete(row)} title="Hapus">
+                    Hapus
                   </button>
                 </div>
               </td>

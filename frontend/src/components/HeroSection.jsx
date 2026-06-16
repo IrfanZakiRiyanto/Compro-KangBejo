@@ -19,7 +19,7 @@ function HeroSection({ facilityCount, activityCount, loading, onExplore, onActiv
   // Fallback pattern jika tidak ada gambar
   const bgStyle = hasSlides && activeSlides[currentImageIndex]?.imageUrl 
     ? { backgroundImage: `url(${activeSlides[currentImageIndex].imageUrl})` }
-    : { background: "linear-gradient(135deg, #2D6A4F 0%, #1B4332 100%)" }
+    : { background: "linear-gradient(135deg, #1B4332 0%, #0D2418 100%)" }
 
   return (
     <section id="beranda" className="hero">
@@ -51,25 +51,7 @@ function HeroSection({ facilityCount, activityCount, loading, onExplore, onActiv
         </div>
       </div>
 
-      {/* Hero Stats */}
-      <div style={{ position: "absolute", bottom: 120, left: 0, right: 0, zIndex: 2 }}>
-        <div className="hero-stats">
-          <div className="stat">
-            <span className="stat-num">{loading ? '...' : facilityCount}</span>
-            <span className="stat-label">Fasilitas</span>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat">
-            <span className="stat-num">{loading ? '...' : activityCount}</span>
-            <span className="stat-label">Kegiatan</span>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat">
-            <span className="stat-num">100%</span>
-            <span className="stat-label">Edukasi Alam</span>
-          </div>
-        </div>
-      </div>
+
       
       <div className="hero-scroll-hint">
         <span>Scroll ke bawah</span>

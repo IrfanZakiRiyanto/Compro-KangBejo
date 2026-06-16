@@ -16,24 +16,24 @@ function ContactSection({ content = {} }) {
           <div className="contact-info">
             
             <div className="contact-item">
-              <h4>📍 Alamat Kami</h4>
+              <h4>Alamat Kami</h4>
               <p>{content.address || "Jl. Sumber Rejo, RT. 12, Balikpapan Tengah, Kota Balikpapan"}</p>
             </div>
             
             <div className="contact-item">
-              <h4>✉️ Email</h4>
+              <h4>Email</h4>
               <p><a href={`mailto:${content.email || "info@kangbejo.com"}`}>{content.email || "info@kangbejo.com"}</a></p>
             </div>
             
             <div className="contact-item">
-              <h4>📞 Telepon / WA</h4>
+              <h4>Telepon / WA</h4>
               <p><a href={`tel:${(content.phone || "(+62) 811 1234 5678").replace(/\s/g, '')}`}>{content.phone || "(+62) 811 1234 5678"}</a></p>
             </div>
 
             <div className="social-links">
-              <a href={content.instagram || "#"} title="Instagram">📸</a>
-              <a href={content.facebook || "#"} title="Facebook">📘</a>
-              <a href={content.youtube || "#"} title="YouTube">▶️</a>
+              <a href={content.instagram || "#"} className="social-link-item" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href={content.facebook || "#"} className="social-link-item" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href={content.youtube || "#"} className="social-link-item" target="_blank" rel="noopener noreferrer">YouTube</a>
             </div>
           </div>
 

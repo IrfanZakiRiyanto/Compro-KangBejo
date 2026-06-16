@@ -37,91 +37,91 @@ function AdminContact() {
     }
   }
 
-  if (loading) return <div>Memuat...</div>
+  if (loading) return <div className="adm-loading">Memuat data...</div>
 
   return (
     <div>
-      {toast && <div className="ad-toast success">{toast}</div>}
-      <div className="ad-page-header">
+      {toast && <div className="adm-toast success">{toast}</div>}
+      <div className="adm-page-header">
         <div>
-          <h1 className="ad-page-title">Kontak & Footer</h1>
-          <p className="ad-page-subtitle">Kelola informasi alamat, sosial media, dan footer website</p>
+          <h1 className="adm-page-title">Kontak & Footer</h1>
+          <p className="adm-page-subtitle">Kelola informasi alamat, sosial media, dan footer website</p>
         </div>
       </div>
 
       <form onSubmit={handleSave}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
           
-          <div className="ad-card">
-            <div className="ad-card-header"><h2 className="ad-card-title">Teks Section Kontak</h2></div>
-            <div className="ad-form-group">
-              <label className="ad-label">Label (Chip)</label>
-              <input className="ad-input" value={content.chip || ""} onChange={e => setContent({...content, chip: e.target.value})} />
+          <div className="adm-card">
+            <div className="adm-card-header"><h2 className="adm-card-title">Teks Section Kontak</h2></div>
+            <div className="adm-form-group">
+              <label className="adm-label">Label (Chip)</label>
+              <input className="adm-input" value={content.chip || ""} onChange={e => setContent({...content, chip: e.target.value})} />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">Judul Utama</label>
-              <input className="ad-input" value={content.title || ""} onChange={e => setContent({...content, title: e.target.value})} />
+            <div className="adm-form-group">
+              <label className="adm-label">Judul Utama</label>
+              <input className="adm-input" value={content.title || ""} onChange={e => setContent({...content, title: e.target.value})} />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">Subjudul</label>
-              <textarea className="ad-textarea" value={content.subtitle || ""} onChange={e => setContent({...content, subtitle: e.target.value})} style={{ minHeight: 80 }} />
+            <div className="adm-form-group">
+              <label className="adm-label">Subjudul</label>
+              <textarea className="adm-textarea" value={content.subtitle || ""} onChange={e => setContent({...content, subtitle: e.target.value})} style={{ minHeight: 80 }} />
             </div>
           </div>
 
-          <div className="ad-card">
-            <div className="ad-card-header"><h2 className="ad-card-title">Informasi Kontak</h2></div>
-            <div className="ad-form-group">
-              <label className="ad-label">Alamat Lengkap</label>
-              <textarea className="ad-textarea" value={content.address || ""} onChange={e => setContent({...content, address: e.target.value})} style={{ minHeight: 80 }} />
+          <div className="adm-card">
+            <div className="adm-card-header"><h2 className="adm-card-title">Informasi Kontak</h2></div>
+            <div className="adm-form-group">
+              <label className="adm-label">Alamat Lengkap</label>
+              <textarea className="adm-textarea" value={content.address || ""} onChange={e => setContent({...content, address: e.target.value})} style={{ minHeight: 80 }} />
             </div>
-            <div className="ad-form-row">
-              <div className="ad-form-group">
-                <label className="ad-label">Email</label>
-                <input type="email" className="ad-input" value={content.email || ""} onChange={e => setContent({...content, email: e.target.value})} />
+            <div className="adm-form-row">
+              <div className="adm-form-group">
+                <label className="adm-label">Email</label>
+                <input type="email" className="adm-input" value={content.email || ""} onChange={e => setContent({...content, email: e.target.value})} />
               </div>
-              <div className="ad-form-group">
-                <label className="ad-label">Telepon / WhatsApp</label>
-                <input className="ad-input" value={content.phone || ""} onChange={e => setContent({...content, phone: e.target.value})} />
+              <div className="adm-form-group">
+                <label className="adm-label">Telepon / WhatsApp</label>
+                <input className="adm-input" value={content.phone || ""} onChange={e => setContent({...content, phone: e.target.value})} />
               </div>
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">Link Google Maps (Iframe SRC URL)</label>
-              <input className="ad-input" value={content.maps_embed_url || ""} onChange={e => setContent({...content, maps_embed_url: e.target.value})} placeholder="https://www.google.com/maps/embed?pb=..." />
+            <div className="adm-form-group">
+              <label className="adm-label">Link Google Maps (Iframe SRC URL)</label>
+              <input className="adm-input" value={content.maps_embed_url || ""} onChange={e => setContent({...content, maps_embed_url: e.target.value})} placeholder="https://www.google.com/maps/embed?pb=..." />
             </div>
           </div>
 
-          <div className="ad-card">
-            <div className="ad-card-header"><h2 className="ad-card-title">Sosial Media</h2></div>
-            <div className="ad-form-group">
-              <label className="ad-label">URL Instagram</label>
-              <input className="ad-input" value={content.instagram || ""} onChange={e => setContent({...content, instagram: e.target.value})} />
+          <div className="adm-card">
+            <div className="adm-card-header"><h2 className="adm-card-title">Sosial Media</h2></div>
+            <div className="adm-form-group">
+              <label className="adm-label">URL Instagram</label>
+              <input className="adm-input" value={content.instagram || ""} onChange={e => setContent({...content, instagram: e.target.value})} />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">URL Facebook</label>
-              <input className="ad-input" value={content.facebook || ""} onChange={e => setContent({...content, facebook: e.target.value})} />
+            <div className="adm-form-group">
+              <label className="adm-label">URL Facebook</label>
+              <input className="adm-input" value={content.facebook || ""} onChange={e => setContent({...content, facebook: e.target.value})} />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">URL YouTube</label>
-              <input className="ad-input" value={content.youtube || ""} onChange={e => setContent({...content, youtube: e.target.value})} />
+            <div className="adm-form-group">
+              <label className="adm-label">URL YouTube</label>
+              <input className="adm-input" value={content.youtube || ""} onChange={e => setContent({...content, youtube: e.target.value})} />
             </div>
           </div>
 
-          <div className="ad-card">
-            <div className="ad-card-header"><h2 className="ad-card-title">Footer</h2></div>
-            <div className="ad-form-group">
-              <label className="ad-label">Nama Brand Footer</label>
-              <input className="ad-input" value={footerContent.brand_name || ""} onChange={e => setFooterContent({...footerContent, brand_name: e.target.value})} />
+          <div className="adm-card">
+            <div className="adm-card-header"><h2 className="adm-card-title">Footer</h2></div>
+            <div className="adm-form-group">
+              <label className="adm-label">Nama Brand Footer</label>
+              <input className="adm-input" value={footerContent.brand_name || ""} onChange={e => setFooterContent({...footerContent, brand_name: e.target.value})} />
             </div>
-            <div className="ad-form-group">
-              <label className="ad-label">Tagline Footer</label>
-              <textarea className="ad-textarea" value={footerContent.tagline || ""} onChange={e => setFooterContent({...footerContent, tagline: e.target.value})} style={{ minHeight: 80 }} />
+            <div className="adm-form-group">
+              <label className="adm-label">Tagline Footer</label>
+              <textarea className="adm-textarea" value={footerContent.tagline || ""} onChange={e => setFooterContent({...footerContent, tagline: e.target.value})} style={{ minHeight: 80 }} />
             </div>
           </div>
 
         </div>
 
         <div style={{ marginTop: 32 }}>
-          <button type="submit" className="ad-btn ad-btn-primary" disabled={saving}>
+          <button type="submit" className="adm-btn adm-btn-primary" disabled={saving}>
             {saving ? "Menyimpan..." : "Simpan Semua Perubahan"}
           </button>
         </div>

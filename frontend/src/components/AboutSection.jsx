@@ -34,12 +34,12 @@ function AboutSection({ content = {}, facilityCount, activityCount }) {
 
             <div className="about-stats">
               <div className="about-stat">
-                <div className="about-stat-num">📍</div>
+                <div className="about-stat-num">{content.location ? content.location.split(',')[0].trim() : "Balikpapan"}</div>
                 <div className="about-stat-label">{content.location || "Balikpapan, Kalimantan Timur"}</div>
               </div>
               <div className="about-stat">
-                <div className="about-stat-num">🏆</div>
-                <div className="about-stat-label">Berdiri Sejak {content.founded_year || "2025"}</div>
+                <div className="about-stat-num">{content.founded_year || "2025"}</div>
+                <div className="about-stat-label">Tahun Berdiri</div>
               </div>
             </div>
           </div>
