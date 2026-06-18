@@ -1,208 +1,137 @@
-# ☁️ Kang Bejo — Company Profile Desa Wisata
+# 🌿 Kang Bejo — Company Profile & CMS Desa Wisata
 
-Website **Company Profile Desa Wisata Kang Bejo Balikpapan** yang dibangun sebagai bagian dari kegiatan **Kuliah Kerja Nyata (KKN)** dan mata kuliah **Komputasi Awan (Cloud Computing)** — Institut Teknologi Kalimantan.
+Website **Company Profile & CMS Desa Wisata Kang Bejo Balikpapan** adalah platform digital interaktif yang dirancang untuk memperkenalkan potensi wisata alam, pertanian kangkung, edukasi budaya, serta fasilitas pendukung yang ada di Desa Wisata Kang Bejo, Balikpapan.
 
-Desa Wisata Kang Bejo adalah destinasi wisata edukasi unggulan di Balikpapan yang menghadirkan pengalaman belajar dan berwisata di tengah kebun kangkung. Pengunjung dapat menikmati berbagai fasilitas dan kegiatan seru yang memadukan alam, budaya, dan edukasi pertanian.
-
----
-
-## 👥 Tim KKN
-
-| Nama            | NIM      | Peran           |
-|-----------------|----------|-----------------|
-| Anggota Satu    | 10011001 | Lead Backend    |
-| Anggota Dua     | 10011002 | Lead Frontend   |
-| Anggota Tiga    | 10011003 | Lead DevOps     |
-| Anggota Empat   | 10011004 | Lead QA & Docs  |
-| Anggota Lima    | 10011005 | Anggota         |
-| Anggota Enam    | 10011006 | Anggota         |
-| Anggota Tujuh   | 10011007 | Anggota         |
-| Anggota Delapan | 10011008 | Anggota         |
-| Anggota Sembilan| 10011009 | Anggota         |
+Website ini dilengkapi dengan **Admin Content Management System (CMS)** yang memungkinkan pengelola desa untuk memperbarui informasi website secara langsung (dinamis) tanpa perlu menyentuh kode program.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Teknologi yang Digunakan (Tech Stack)
 
-| Teknologi        | Fungsi                          |
-|------------------|---------------------------------|
-| FastAPI          | Backend REST API                |
-| React + Vite     | Frontend SPA                    |
-| PostgreSQL       | Database (Modul 2)              |
-| Docker           | Containerisasi (Modul 5)        |
-| Docker Compose   | Multi-container (Modul 7)       |
-| GitHub Actions   | CI/CD Pipeline (Modul 10)       |
-| Railway / Render | Cloud Deployment (Modul 11)     |
-| Nginx            | API Gateway (Modul 13)          |
+Sistem ini dibangun menggunakan arsitektur modern berbasis client-server:
 
----
+### 1. Backend (Server & API)
+*   **FastAPI**: Framework Python yang berkinerja tinggi dan cepat untuk membuat REST API.
+*   **SQLAlchemy ORM**: Untuk manajemen database dan pemetaan objek relasional.
+*   **SQLite**: Database lokal default untuk pengembangan (development) tanpa perlu konfigurasi server database tambahan.
+*   **PostgreSQL**: Database relasional berskala produksi yang didukung penuh untuk deployment cloud.
+*   **Uvicorn**: Server ASGI yang cepat untuk menjalankan aplikasi FastAPI.
+*   **Python-Jose & Bcrypt**: Digunakan untuk sistem otentikasi login admin yang aman (JWT Token).
 
-## 🏗️ Architecture
+### 2. Frontend (User Interface)
+*   **React (Vite)**: Framework javascript modern untuk membangun antarmuka web SPA (Single Page Application) yang cepat dan responsif.
+*   **Vanilla CSS**: Digunakan untuk styling premium bertema alam (*tourism-style*) dengan transisi visual yang halus, slider dinamis, serta tata letak responsif.
+*   **HTML5 & Browser APIs**: Termasuk Google Maps Embed API ter-sanitasi dan pemilih tanggal (*Date Picker*) bawaan.
 
-```
-[React Frontend :5173] <-- HTTP --> [FastAPI Backend :8000] <-- SQL --> [PostgreSQL :5432]
-          ↕                                    ↕
-       /facilities                    facilities table
-       /activities                    activities table
-```
-
-> Diagram ini akan berkembang setiap modul seiring penambahan komponen baru.
+### 3. Deployment & DevOps
+*   **Docker & Docker Compose**: Untuk containerisasi seluruh sistem agar mudah dijalankan di lingkungan manapun.
+*   **GitHub Actions**: Pipeline integrasi berkelanjutan (CI/CD) untuk otomatisasi pengujian.
 
 ---
 
-## 🚀 Getting Started (Menjalankan Secara Lokal Tanpa Docker)
+## 🚀 Cara Menjalankan Secara Lokal (Development)
 
-### Prasyarat
-- Python 3.10+
-- Node.js 18+
-- Git
+Sistem ini mendukung setup instan menggunakan **SQLite** secara lokal sehingga Anda dapat menjalankannya dalam hitungan menit tanpa menginstal PostgreSQL.
 
-### Setup Database & Environment (.env)
-
-Kami menyediakan 2 opsi database yang dapat digunakan secara lokal:
-
-#### Opsi A: SQLite (Sangat Direkomendasikan — Nol Konfigurasi & Sangat Ringan)
-Sangat cocok untuk mempermudah pengerjaan tugas atau saat menyerahkan proyek ke mitra desa yang tidak memiliki latar belakang IT.
-1. Salin template `.env.example` menjadi `.env` di folder `backend/`:
-   ```bash
-   # Di Windows CMD/PowerShell:
-   copy backend\.env.example backend\.env
-   # Di Bash/Linux/macOS:
-   cp backend/.env.example backend/.env
-   ```
-2. Pastikan isi `DATABASE_URL` di `backend/.env` adalah:
-   ```env
-   DATABASE_URL=sqlite:///./kangbejo.db
-   ```
-   *(File database `kangbejo.db` akan dibuat secara otomatis saat backend dijalankan pertama kali)*.
-
-#### Opsi B: PostgreSQL Lokal (Sesuai Panduan Modul 2 - 4)
-Gunakan ini jika diwajibkan oleh modul kuliah untuk menggunakan server PostgreSQL lokal.
-1. Jalankan PostgreSQL di komputer lokal Anda, lalu masuk via terminal:
-   ```bash
-   psql -U postgres
-   ```
-2. Buat database `kangbejo`:
-   ```sql
-   CREATE DATABASE kangbejo;
-   \q
-   ```
-3. Ubah isi `DATABASE_URL` di `backend/.env` menjadi:
-   ```env
-   DATABASE_URL=postgresql://postgres:PASSWORD_POSTGRES_ANDA@localhost:5432/kangbejo
-   ```
+### 📋 Prasyarat
+Sebelum memulai, pastikan komputer Anda telah terinstal:
+*   [Git](https://git-scm.com/)
+*   [Python 3.10+](https://www.python.org/)
+*   [Node.js 18+](https://nodejs.org/)
 
 ---
 
-### Langkah Menjalankan Aplikasi
-
-#### 1. Menjalankan Backend FastAPI
-1. Buka terminal dan masuk ke folder `backend`:
+### 1. Jalankan Backend (FastAPI)
+1. Buka terminal/command prompt, masuk ke folder `backend`:
    ```bash
    cd backend
    ```
-2. Install dependencies Python:
+2. Salin template konfigurasi `.env`:
+   * **Windows (CMD/PowerShell)**:
+     ```powershell
+     copy .env.example .env
+     ```
+   * **Mac/Linux**:
+     ```bash
+     cp .env.example .env
+     ```
+3. Pastikan isi `DATABASE_URL` di dalam `backend/.env` menggunakan SQLite:
+   ```env
+   DATABASE_URL=sqlite:///./kangbejo.db
+   ```
+4. Instal dependencies Python yang diperlukan:
    ```bash
    pip install -r requirements.txt
    ```
-3. Jalankan server backend:
+5. Jalankan server FastAPI:
    ```bash
    uvicorn main:app --reload --port 8000
    ```
-   * Backend berjalan di: [http://localhost:8000](http://localhost:8000)
-   * Dokumentasi Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
+   * Backend berjalan di: **http://localhost:8000**
+   * Dokumentasi interaktif Swagger UI: **http://localhost:8000/docs**
+   * *Catatan: File database `kangbejo.db` dan data awal (seeding) otomatis terbentuk saat pertama kali backend dijalankan.*
 
-#### 2. Menjalankan Frontend React
+---
+
+### 2. Jalankan Frontend (React + Vite)
 1. Buka terminal baru dan masuk ke folder `frontend`:
    ```bash
    cd frontend
    ```
-2. Buat file `.env` jika belum ada:
-   ```bash
-   # Di Windows CMD/PowerShell:
-   copy .env.example .env
-   # Di Bash/Linux/macOS:
-   cp .env.example .env
-   ```
-   *Pastikan isinya adalah `VITE_API_URL=http://localhost:8000`*
-3. Install package node:
+2. Salin template konfigurasi `.env`:
+   * **Windows (CMD/PowerShell)**:
+     ```powershell
+     copy .env.example .env
+     ```
+   * **Mac/Linux**:
+     ```bash
+     cp .env.example .env
+     ```
+3. Instal dependencies javascript:
    ```bash
    npm install
    ```
-4. Jalankan aplikasi web:
+4. Jalankan server pembangunan lokal:
    ```bash
    npm run dev
    ```
-   * Frontend berjalan di: [http://localhost:5173](http://localhost:5173) (atau port yang tertera di terminal)
+   * Frontend berjalan di: **http://localhost:5173** (atau port lain yang tertera di terminal).
 
 ---
 
-## 🌿 Konten Desa Wisata Kang Bejo
+## 🔑 Akses Panel Admin (CMS)
 
-### Fasilitas
-| Fasilitas                    | Deskripsi                                                  |
-|------------------------------|------------------------------------------------------------|
-| 🌿 Kebun Kangkung            | Hamparan kebun kangkung segar, ikon utama desa wisata      |
-| 🍽️ Pujasera                  | Pusat Jajanan Serba Ada — kuliner lokal & olahan kangkung  |
-| 📚 Edukasi Pertanian Kangkung | Program edukasi interaktif budidaya kangkung               |
-| 📸 Spot Foto                 | Area foto instagramable di tengah kebun kangkung           |
-
-### Kegiatan
-| Kegiatan                    | Deskripsi                                               |
-|-----------------------------|---------------------------------------------------------|
-| 🛒 Bazar Murah              | Pasar murah produk lokal & hasil pertanian              |
-| 🗺️ Jelajah Wisata           | Tur keliling area desa wisata dengan pemandu            |
-| 💃 Tari Daerah              | Pertunjukan tari daerah Kalimantan Timur                |
-| 🏃 Geber Kang Bejo          | Olahraga bersama di alam terbuka                        |
-| 🔬 Ruang Pintar             | Ruang belajar interaktif pertanian modern               |
-| 🌱 Tanam Kangkung           | Pengalaman menanam kangkung bersama petani lokal        |
+Untuk mengelola seluruh konten website (Hero Slide, Profil Tentang Kami, Fasilitas, Kegiatan, Galeri Media, Berita, & Kontak):
+1. Buka halaman admin di browser: **http://localhost:5173/admin**
+2. Masukkan akun admin default berikut:
+   * **Username**: `admin`
+   * **Password**: `kangbejo2024`
+3. Setelah login berhasil, Anda dapat langsung memperbarui konten website secara dinamis.
 
 ---
 
-## 📅 Roadmap Pengembangan
-
-| Modul | Fokus                           | Status |
-|-------|---------------------------------|--------|
-| 1     | Setup & Hello World             | ✅     |
-| 2     | REST API + Database             | ✅     |
-| 3     | React Frontend Lengkap          | ✅     |
-| 4     | Full-Stack Integration          | ✅     |
-| 5-7   | Docker & Compose                | ✅     |
-| 8     | UTS Demo                        | ⬜     |
-| 9     | Git Workflow & Branching        | ✅     |
-| 10    | CI Pipeline (GitHub Actions)    | ✅     |
-| 11    | CD Pipeline & Deploy            | ⬜     |
-| 12-14 | Microservices + Gateway         | ⬜     |
-| 15    | Polish & Final UAS              | ⬜     |
-
----
-
-## 📁 Struktur Proyek
+## 📁 Struktur Folder Proyek
 
 ```
 Compro-KangBejo/
 ├── backend/
-│   ├── main.py              # FastAPI app + endpoints CRUD
-│   ├── database.py          # Koneksi PostgreSQL (SQLAlchemy)
-│   ├── models.py            # Model: Facility, Activity
-│   ├── schemas.py           # Pydantic schemas validasi
-│   ├── crud.py              # Fungsi CRUD
-│   ├── requirements.txt     # Python dependencies
-│   ├── .env                 # ⚠️ JANGAN di-commit! (DATABASE_URL)
-│   └── .env.example         # Template .env
+│   ├── main.py              # Entrypoint utama aplikasi FastAPI & Auto-Seeder
+│   ├── admin_routes.py      # Route & logic API admin panel & publik
+│   ├── database.py          # Konfigurasi koneksi database & session
+│   ├── models.py            # Definisi tabel database (SQLAlchemy)
+│   ├── schemas.py           # Skema Pydantic untuk validasi input/output
+│   ├── crud.py              # Logika kueri database (Create, Read, Update, Delete)
+│   └── requirements.txt     # Daftar dependensi Python
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx          # React app utama
-│   │   ├── App.css          # Styling premium
-│   │   └── main.jsx         # Entry point React
-│   ├── index.html
-│   ├── vite.config.js
-│   └── package.json
-├── docs/
-├── .gitignore
-└── README.md
+│   │   ├── admin/           # Halaman & komponen Dashboard Admin (CMS)
+│   │   ├── components/      # Komponen UI publik (Navbar, Hero, NewsSection, dll)
+│   │   ├── pages/           # Halaman utama publik & detail berita
+│   │   ├── services/        # Client API untuk request ke Backend
+│   │   └── App.jsx          # Root Component React
+│   ├── vite.config.js       # Konfigurasi build tool Vite
+│   └── package.json         # Daftar dependensi Node.js
+├── docs/                    # Dokumentasi tambahan proyek
+├── docker-compose.yml       # Konfigurasi orkestrasi Docker
+└── README.md                # Dokumentasi utama proyek
 ```
-
----
-
-*Proyek ini dikembangkan secara bertahap mengikuti kurikulum Modul 1–15 mata kuliah Komputasi Awan, Institut Teknologi Kalimantan.*
