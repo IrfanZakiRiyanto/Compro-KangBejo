@@ -355,31 +355,87 @@ img   { display: block; max-width: 100%; }
 
 /* ── ACTIVITY CARD ──────────────────────────────────── */
 .activity-card {
-  border-radius:var(--r-md); padding:40px 32px;
+  border-radius:var(--r-md);
   color:#fff; position:relative; overflow:hidden;
   box-shadow:var(--shadow-md);
-  min-height: 240px;
+  min-height: 260px;
   display: flex; flex-direction: column;
   justify-content: flex-end;
-  transition:transform .3s ease, box-shadow .3s ease;
+  transition:transform .35s ease, box-shadow .35s ease;
   border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+}
+
+/* Gradient overlay — lebih gelap saat hover */
+.activity-card::after {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.15) 40%,
+    rgba(0,0,0,0.55) 100%
+  );
+  transition: background 0.4s ease;
+  z-index: 1;
+}
+.activity-card:hover::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.1) 0%,
+    rgba(0,0,0,0.35) 40%,
+    rgba(0,0,0,0.82) 100%
+  );
 }
 .activity-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); }
-.activity-card::before {
-  content:''; position:absolute; inset:0;
-  background:rgba(7,22,44,.2); opacity:0;
-  transition:opacity .3s ease;
+
+/* Content area di atas overlay */
+.activity-card-content {
+  position: relative;
+  z-index: 2;
+  padding: 28px 28px 28px;
+  display: flex;
+  flex-direction: column;
 }
-.activity-card:hover::before { opacity:1; }
 
 .activity-num {
-  position:absolute; top:24px; right:28px;
+  position:absolute; top:20px; right:24px;
   font-size:3rem; font-weight:700;
-  color:rgba(197,168,128,.4); line-height:1;
+  color:rgba(220,192,120,.75);
+  line-height:1;
   font-family: 'Playfair Display', serif;
+  z-index: 2;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
-.activity-name { font-family: 'Playfair Display', serif; font-size:1.3rem; font-weight:700; margin-bottom:8px; position: relative; z-index: 2; }
-.activity-desc { font-size:.88rem; color:rgba(255,255,255,0.85); line-height:1.6; font-weight: 300; position: relative; z-index: 2; }
+.activity-name {
+  font-family: 'Playfair Display', serif;
+  font-size:1.25rem; font-weight:700;
+  margin-bottom: 0;
+  transition: margin-bottom 0.35s ease;
+}
+
+/* Deskripsi: tersembunyi, slide-up saat hover */
+.activity-desc {
+  font-size:.85rem;
+  color:rgba(255,255,255,0.88);
+  line-height:1.65;
+  font-weight: 300;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    max-height 0.45s ease,
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    margin-top 0.35s ease;
+  margin-top: 0;
+}
+.activity-card:hover .activity-desc {
+  max-height: 160px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 10px;
+}
 
 /* ── NEWS CARD & GRID ──────────────────────────────────────── */
 .news-grid {

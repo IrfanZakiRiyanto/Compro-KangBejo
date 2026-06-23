@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 import re
+import os
 import urllib.parse
 import requests
 
@@ -169,16 +170,21 @@ async def upload_media(
     admin: AdminUser = Depends(get_current_admin),
 ):
     """Upload file media (gambar/video) ke database. Max 5MB."""
-    # Validasi tipe file
+    # Validasi tipe file (baik lewat MIME type maupun ekstensi file)
     allowed_types = [
-        "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml",
-        "video/mp4", "video/webm",
+        "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp", "image/svg+xml",
+        "image/x-png", "image/pjpeg",
+        "video/mp4", "video/webm", "video/ogg", "video/quicktime",
     ]
-    if file.content_type not in allowed_types:
+    filename = file.filename or ""
+    ext = os.path.splitext(filename)[1].lower()
+    allowed_extensions = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".mp4", ".webm", ".mov"}
+
+    if file.content_type not in allowed_types and ext not in allowed_extensions:
         raise HTTPException(
             status_code=400,
-            detail=f"Tipe file '{file.content_type}' tidak didukung. "
-                   f"Gunakan: {', '.join(allowed_types)}",
+            detail=f"Tipe file '{file.content_type}' atau ekstensi '{ext}' tidak didukung. "
+                   f"Gunakan format gambar/video standar.",
         )
 
     # Baca file data

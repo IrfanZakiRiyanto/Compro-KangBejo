@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
-import { listMedia, uploadMedia, getMediaUrl } from "../../services/adminApi"
+import { createPortal } from "react-dom"
+import { listMedia, uploadMedia, deleteMedia, getMediaUrl } from "../../services/adminApi"
 
 function MediaPicker({ onSelect, onClose }) {
   const [media, setMedia] = useState([])
@@ -57,8 +58,20 @@ function MediaPicker({ onSelect, onClose }) {
     }
   }
 
-  return (
-    <div className="adm-modal-overlay" onClick={onClose}>
+  const handleDelete = async (e, item) => {
+    e.stopPropagation()
+    if (!confirm(`Hapus "${item.filename}" secara permanen?`)) return
+    try {
+      await deleteMedia(item.id)
+      if (selectedId === item.id) setSelectedId(null)
+      fetchMedia()
+    } catch (err) {
+      alert("Gagal menghapus: " + err.message)
+    }
+  }
+
+  const pickerContent = (
+    <div className="adm-modal-overlay" onClick={onClose} style={{ zIndex: 9999 }}>
       <div className="adm-modal adm-modal-lg" onClick={e => e.stopPropagation()} style={{ display: "flex", flexDirection: "column", maxHeight: "90vh" }}>
         {/* Header */}
         <div className="adm-modal-header" style={{ marginBottom: 16 }}>
@@ -137,7 +150,42 @@ function MediaPicker({ onSelect, onClose }) {
                     ) : (
                       <img src={getMediaUrl(item.id)} alt={item.filename} />
                     )}
-                    
+
+                    {/* Delete button — always visible on hover via CSS, top-right */}
+                    <button
+                      type="button"
+                      onClick={(e) => handleDelete(e, item)}
+                      title="Hapus media ini"
+                      style={{
+                        position: "absolute",
+                        top: 5,
+                        right: 5,
+                        width: 22,
+                        height: 22,
+                        borderRadius: "50%",
+                        background: "rgba(220, 38, 38, 0.9)",
+                        color: "#fff",
+                        border: "none",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.75rem",
+                        fontWeight: "bold",
+                        lineHeight: 1,
+                        zIndex: 10,
+                        opacity: 0,
+                        transition: "opacity 0.15s ease",
+                        padding: 0,
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = "1"}
+                      onMouseLeave={e => e.currentTarget.style.opacity = "0"}
+                      onFocus={e => e.currentTarget.style.opacity = "1"}
+                      onBlur={e => e.currentTarget.style.opacity = "0"}
+                    >
+                      ×
+                    </button>
+
                     {/* Tick icon overlay if selected */}
                     {isSelected && (
                       <div style={{
@@ -200,6 +248,8 @@ function MediaPicker({ onSelect, onClose }) {
       </div>
     </div>
   )
+
+  return createPortal(pickerContent, document.body)
 }
 
 export default MediaPicker
