@@ -17,7 +17,6 @@ function Navbar({ activeSection, onNavClick, isConnected, apiVersion, brandText 
     { id: 'tentang', label: 'Tentang' },
     { id: 'fasilitas', label: 'Fasilitas' },
     { id: 'kegiatan', label: 'Kegiatan' },
-    { id: 'berita', label: 'Berita' },
     { id: 'kontak', label: 'Kontak' },
   ]
 

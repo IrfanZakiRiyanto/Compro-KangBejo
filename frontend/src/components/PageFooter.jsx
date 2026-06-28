@@ -21,7 +21,6 @@ function PageFooter({ apiVersion, content = {} }) {
                   <li><a href="#tentang">Tentang Kami</a></li>
                   <li><a href="#fasilitas">Fasilitas</a></li>
                   <li><a href="#kegiatan">Kegiatan</a></li>
-                  <li><a href="#berita">Berita</a></li>
                 </ul>
               </div>
               <div className="footer-col">

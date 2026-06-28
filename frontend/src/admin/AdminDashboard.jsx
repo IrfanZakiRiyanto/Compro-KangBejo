@@ -39,14 +39,6 @@ function AdminDashboard() {
       desc: "Program dan kegiatan desa",
     },
     {
-      label: "Berita",
-      total: stats?.news?.total ?? 0,
-      active: stats?.news?.active ?? 0,
-      link: "/admin/news",
-      linkLabel: "Kelola Berita",
-      desc: "Artikel dan informasi terbaru",
-    },
-    {
       label: "Media Library",
       total: stats?.media?.total ?? 0,
       active: null,

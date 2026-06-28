@@ -11,7 +11,12 @@ function AdminContact() {
   useEffect(() => {
     getAllSiteContent()
       .then(res => {
-        setContent(res.sections?.contact || {})
+        const contactData = res.sections?.contact || {}
+        // Migrasi data: Jika tiktok masih kosong tapi facebook ada isinya, salin ke tiktok
+        if (!contactData.tiktok && contactData.facebook) {
+          contactData.tiktok = contactData.facebook
+        }
+        setContent(contactData)
         setFooterContent(res.sections?.footer || {})
       })
       .catch(err => alert(err.message))
@@ -27,7 +32,9 @@ function AdminContact() {
     e.preventDefault()
     setSaving(true)
     try {
-      await updateSiteContent("contact", content)
+      // Hapus key facebook agar bersih saat disimpan
+      const { facebook, ...cleanedContent } = content
+      await updateSiteContent("contact", cleanedContent)
       await updateSiteContent("footer", footerContent)
       showToast("Data Kontak & Footer berhasil disimpan!")
     } catch (err) {
@@ -97,8 +104,8 @@ function AdminContact() {
               <input className="adm-input" value={content.instagram || ""} onChange={e => setContent({...content, instagram: e.target.value})} />
             </div>
             <div className="adm-form-group">
-              <label className="adm-label">URL Facebook</label>
-              <input className="adm-input" value={content.facebook || ""} onChange={e => setContent({...content, facebook: e.target.value})} />
+              <label className="adm-label">URL TikTok</label>
+              <input className="adm-input" value={content.tiktok || ""} onChange={e => setContent({...content, tiktok: e.target.value})} />
             </div>
             <div className="adm-form-group">
               <label className="adm-label">URL YouTube</label>

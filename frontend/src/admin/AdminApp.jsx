@@ -13,7 +13,6 @@ import AdminHero from "./AdminHero"
 import AdminAbout from "./AdminAbout"
 import AdminFacilities from "./AdminFacilities"
 import AdminActivities from "./AdminActivities"
-import AdminNews from "./AdminNews"
 import AdminContact from "./AdminContact"
 
 function AdminLayout({ children }) {
@@ -46,7 +45,6 @@ function AdminApp() {
       <Route path="about" element={<AdminLayout><AdminAbout /></AdminLayout>} />
       <Route path="facilities" element={<AdminLayout><AdminFacilities /></AdminLayout>} />
       <Route path="activities" element={<AdminLayout><AdminActivities /></AdminLayout>} />
-      <Route path="news" element={<AdminLayout><AdminNews /></AdminLayout>} />
       <Route path="contact" element={<AdminLayout><AdminContact /></AdminLayout>} />
       <Route path="*" element={<Navigate to="dashboard" replace />} />
     </Routes>

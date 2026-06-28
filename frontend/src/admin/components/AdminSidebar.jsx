@@ -39,9 +39,6 @@ function AdminSidebar() {
         <NavLink to="/admin/activities" className={({isActive}) => isActive ? "sidebar-link active" : "sidebar-link"}>
           Kegiatan
         </NavLink>
-        <NavLink to="/admin/news" className={({isActive}) => isActive ? "sidebar-link active" : "sidebar-link"}>
-          Berita
-        </NavLink>
         <NavLink to="/admin/contact" className={({isActive}) => isActive ? "sidebar-link active" : "sidebar-link"}>
           Kontak & Footer
         </NavLink>

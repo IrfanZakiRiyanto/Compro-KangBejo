@@ -50,7 +50,7 @@ def seed_initial_data(db: Session):
     if db.query(AdminUser).count() == 0:
         admin = AdminUser(
             username="admin",
-            password_hash=hash_password("kangbejo2024"),
+            password_hash=hash_password("kangbejoadmin"),
         )
         db.add(admin)
         db.commit()
@@ -106,7 +106,7 @@ def seed_initial_data(db: Session):
                 "email": "info@kangbejo.com",
                 "phone": "(+62) 811 1234 5678",
                 "instagram": "#",
-                "facebook": "#",
+                "tiktok": "#",
                 "youtube": "#",
                 "maps_embed_url": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8893796594343!2d116.83981881475396!3d-1.236402699097727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df1473fb4e81561%3A0xc343fb608d0a0b63!2sDesa%20Wisata%20Kang%20Bejo!5e0!3m2!1sen!2sid!4v1689234857283!5m2!1sen!2sid",
             },

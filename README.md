@@ -101,11 +101,11 @@ Sebelum memulai, pastikan komputer Anda telah terinstal:
 
 ## 🔑 Akses Panel Admin (CMS)
 
-Untuk mengelola seluruh konten website (Hero Slide, Profil Tentang Kami, Fasilitas, Kegiatan, Galeri Media, Berita, & Kontak):
+Untuk mengelola seluruh konten website (Hero Slide, Profil Tentang Kami, Fasilitas, Kegiatan, Galeri Media, & Kontak):
 1. Buka halaman admin di browser: **http://localhost:5173/admin**
 2. Masukkan akun admin default berikut:
    * **Username**: `admin`
-   * **Password**: `kangbejo2024`
+   * **Password**: `kangbejoadmin`
 3. Setelah login berhasil, Anda dapat langsung memperbarui konten website secara dinamis.
 
 ---

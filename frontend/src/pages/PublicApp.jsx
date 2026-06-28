@@ -7,10 +7,9 @@ import FacilityCard  from "../components/FacilityCard"
 import ActivityCard  from "../components/ActivityCard"
 import SectionHeader from "../components/SectionHeader"
 import PageFooter    from "../components/PageFooter"
-import NewsSection   from "../components/NewsSection"
 import ContactSection from "../components/ContactSection"
 
-import { checkHealth, fetchFacilities, fetchActivities, fetchSiteContent, fetchHeroSlides, fetchNews, getMediaUrl } from "../services/api"
+import { checkHealth, fetchFacilities, fetchActivities, fetchSiteContent, fetchHeroSlides, getMediaUrl } from "../services/api"
 
 function PublicApp() {
   const [activeSection, setActiveSection] = useState("beranda")
@@ -20,20 +19,18 @@ function PublicApp() {
   const [heroSlides,    setHeroSlides]    = useState([])
   const [facilities,    setFacilities]    = useState([])
   const [activities,    setActivities]    = useState([])
-  const [news,          setNews]          = useState([])
   const [loading,       setLoading]       = useState(true)
 
   // ── Fetch semua data ──────────────────────────────
   const loadAll = useCallback(async () => {
     setLoading(true)
     try {
-      const [connected, contentRes, slidesRes, facData, actData, newsRes] = await Promise.all([
+      const [connected, contentRes, slidesRes, facData, actData] = await Promise.all([
         checkHealth(),
         fetchSiteContent().catch(() => ({ sections: {} })),
         fetchHeroSlides().catch(() => ({ items: [] })),
         fetchFacilities({ active_only: true }),
         fetchActivities({ active_only: true }),
-        fetchNews().catch(() => ({ items: [] })),
       ])
       setIsConnected(connected)
       setSiteContent(contentRes.sections || {})
@@ -55,7 +52,6 @@ function PublicApp() {
           image: a.media_id ? getMediaUrl(a.media_id) : null,
         }))
       )
-      setNews(newsRes.items ?? [])
     } catch (err) {
       console.error("Gagal memuat data:", err)
     } finally {
@@ -78,7 +74,7 @@ function PublicApp() {
   }, [])
 
   useEffect(() => {
-    const ids = ["beranda","tentang","fasilitas","kegiatan","berita","kontak"]
+    const ids = ["beranda","tentang","fasilitas","kegiatan","kontak"]
     const obs = new IntersectionObserver(
       entries => entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id) }),
       { threshold: 0.35 }
@@ -174,11 +170,6 @@ function PublicApp() {
         </section>
       )}
 
-      {/* BERITA */}
-      <NewsSection
-        news={news}
-        content={siteContent.news || {}}
-      />
 
       {/* KONTAK */}
       <ContactSection content={siteContent.contact || {}} />
