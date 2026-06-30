@@ -30,6 +30,7 @@ function Navbar({ activeSection, onNavClick, isConnected, apiVersion, brandText 
       <div className="container nav-container" style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
         
         <div className="nav-brand" onClick={() => handleNavClick('beranda')} style={{ cursor: 'pointer' }}>
+          <img src="/Logo_kangBejo-removebg.png" alt="Logo" className="brand-logo" />
           <span className="brand-text">{brandText}</span>
         </div>
 

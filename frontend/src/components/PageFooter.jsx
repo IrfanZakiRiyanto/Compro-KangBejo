@@ -28,7 +28,6 @@ function PageFooter({ apiVersion, content = {} }) {
                 <ul>
                   <li><a href="#kontak">Hubungi Kami</a></li>
                   <li><a href="#kontak">Lokasi Map</a></li>
-                  <li><a href="/admin/login">Admin Login</a></li>
                 </ul>
               </div>
             </div>
@@ -37,7 +36,7 @@ function PageFooter({ apiVersion, content = {} }) {
           <div className="footer-bottom">
             <p>&copy; {currentYear} {brandName}. Hak cipta dilindungi.</p>
             <div className="footer-meta">
-              Proyek KKN ITK &middot; API v{apiVersion || "..."}
+              Proyek INSOS ITK
             </div>
           </div>
         </div>
