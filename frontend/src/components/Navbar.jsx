@@ -37,7 +37,6 @@ function Navbar({ activeSection, onNavClick, isConnected, apiVersion, brandText 
         <button 
           className="mobile-menu-btn" 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          style={{ display: "none" }} /* Assuming App.css handles mobile menu button or we hide it for now */
         >
           {mobileMenuOpen ? "✕" : "☰"}
         </button>
