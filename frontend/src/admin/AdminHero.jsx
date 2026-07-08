@@ -193,8 +193,8 @@ function AdminHero() {
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                    <button className="adm-btn adm-btn-outline adm-btn-sm" style={{ minWidth: 36, height: 32, padding: 0 }} onClick={() => moveSlide(i, -1)} disabled={i === 0}>▲</button>
-                    <button className="adm-btn adm-btn-outline adm-btn-sm" style={{ minWidth: 36, height: 32, padding: 0 }} onClick={() => moveSlide(i, 1)} disabled={i === slides.length - 1}>▼</button>
+                    <button className="adm-btn adm-btn-outline adm-btn-sm" style={{ minWidth: 36, height: 32, padding: 0, justifyContent: "center" }} onClick={() => moveSlide(i, -1)} disabled={i === 0}>▲</button>
+                    <button className="adm-btn adm-btn-outline adm-btn-sm" style={{ minWidth: 36, height: 32, padding: 0, justifyContent: "center" }} onClick={() => moveSlide(i, 1)} disabled={i === slides.length - 1}>▼</button>
                     <div style={{ flex: 1 }} />
                     <button 
                       className={`adm-btn adm-btn-outline adm-btn-sm ${slide.is_active ? "danger" : ""}`}

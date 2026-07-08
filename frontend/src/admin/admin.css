@@ -344,6 +344,7 @@
   border-radius: 100px;
   font-size: .72rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .adm-badge-active {
